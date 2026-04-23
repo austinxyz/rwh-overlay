@@ -140,10 +140,16 @@ def copy_claude(rwh: Path, overlay: Path, output: Path) -> None:
 
 
 def generate_derived(py: str, rwh: Path, overlay: Path, output: Path) -> None:
-    print("Generating index.md...")
+    print("Generating index.md (en)...")
     subprocess.run([py, str(SCRIPT_DIR / "gen_index.py"),
                     "--wiki-root", str(output / "wiki"),
-                    "--output", str(output / "wiki" / "index.md")], check=True)
+                    "--output", str(output / "wiki" / "index.md"),
+                    "--lang", "en"], check=True)
+    print("Generating index.zh.md...")
+    subprocess.run([py, str(SCRIPT_DIR / "gen_index.py"),
+                    "--wiki-root", str(output / "wiki"),
+                    "--output", str(output / "wiki" / "index.zh.md"),
+                    "--lang", "zh"], check=True)
     print("Generating watchlist.md...")
     subprocess.run([py, str(SCRIPT_DIR / "gen_watchlist.py"),
                     "--wiki-root", str(output / "wiki"),
