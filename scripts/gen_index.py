@@ -1,10 +1,68 @@
 #!/usr/bin/env python3
-"""Generate wiki/index.md by scanning tickers/*/overview.md frontmatter."""
+"""Generate wiki/index.md by scanning tickers/*/overview.md.
+
+Reads `summary` and `updated` from frontmatter when present; otherwise falls
+back to extracting them from the body. Upstream (kgajjala) tickers use the
+blockquote style (``> **Last Updated**: YYYY-MM-DD``); overlay tickers use
+the bare style (``**Last updated**: YYYY-MM-DD``). Both are recognized.
+"""
 import argparse
+import re
 import sys
 from pathlib import Path
 
 import frontmatter
+
+LAST_UPDATED_RE = re.compile(
+    r"^\s*(?:>\s*)?\*\*Last [Uu]pdated?\*\*:\s*(?P<date>\d{4}-\d{2}-\d{2})",
+    re.MULTILINE,
+)
+
+CHANGELOG_HEADING_RE = re.compile(
+    r"^##\s*\[?(?P<date>\d{4}-\d{2}-\d{2})\]?\s*—",
+    re.MULTILINE,
+)
+
+SUMMARY_MAX_LEN = 160
+
+# Paragraphs whose every non-empty line starts with any of these prefixes are
+# considered metadata/structure, not prose.
+_NON_PROSE_PREFIXES = (">", "**", "#", "---", "- ", "* ", "|", "`")
+
+
+def extract_last_updated(body: str) -> str:
+    m = LAST_UPDATED_RE.search(body)
+    return m.group("date") if m else ""
+
+
+def extract_date_from_changelog(changelog_path: Path) -> str:
+    """Return the date of the first (most recent) `## DATE —` heading, or ''."""
+    if not changelog_path.is_file():
+        return ""
+    m = CHANGELOG_HEADING_RE.search(changelog_path.read_text(encoding="utf-8"))
+    return m.group("date") if m else ""
+
+
+def extract_summary(body: str, max_len: int = SUMMARY_MAX_LEN) -> str:
+    """Return the first substantive prose paragraph, squashed and truncated."""
+    for paragraph in body.split("\n\n"):
+        lines = [l.strip() for l in paragraph.splitlines() if l.strip()]
+        if not lines:
+            continue
+        if all(l.startswith(_NON_PROSE_PREFIXES) for l in lines):
+            continue
+        text = " ".join(lines)
+        # Strip bold/italic markers for cleaner table display.
+        text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+        text = re.sub(r"\*(.+?)\*", r"\1", text)
+        # Collapse pipe characters (would break the markdown table row).
+        text = text.replace("|", "/")
+        if len(text) < 40:
+            continue
+        if len(text) > max_len:
+            return text[: max_len].rsplit(" ", 1)[0] + "…"
+        return text
+    return ""
 
 
 def collect(wiki_root: Path):
@@ -20,10 +78,16 @@ def collect(wiki_root: Path):
         src = post.get("source", "unknown")
         if src not in rows:
             continue
+        summary = post.get("summary") or extract_summary(post.content)
+        updated = (
+            post.get("updated")
+            or extract_last_updated(post.content)
+            or extract_date_from_changelog(ticker_dir / "changelog.md")
+        )
         rows[src].append({
             "ticker": post.get("ticker", ticker_dir.name),
-            "summary": post.get("summary", ""),
-            "updated": post.get("updated", ""),
+            "summary": summary,
+            "updated": updated,
             "path": f"tickers/{ticker_dir.name}/overview.md",
         })
     return rows
