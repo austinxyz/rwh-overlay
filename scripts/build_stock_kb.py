@@ -150,10 +150,16 @@ def generate_derived(py: str, rwh: Path, overlay: Path, output: Path) -> None:
                     "--wiki-root", str(output / "wiki"),
                     "--output", str(output / "wiki" / "index.zh.md"),
                     "--lang", "zh"], check=True)
-    print("Generating watchlist.md...")
+    print("Generating watchlist.md (en)...")
     subprocess.run([py, str(SCRIPT_DIR / "gen_watchlist.py"),
                     "--wiki-root", str(output / "wiki"),
-                    "--output", str(output / "wiki" / "watchlist.md")], check=True)
+                    "--output", str(output / "wiki" / "watchlist.md"),
+                    "--lang", "en"], check=True)
+    print("Generating watchlist.zh.md...")
+    subprocess.run([py, str(SCRIPT_DIR / "gen_watchlist.py"),
+                    "--wiki-root", str(output / "wiki"),
+                    "--output", str(output / "wiki" / "watchlist.zh.md"),
+                    "--lang", "zh"], check=True)
     print("Merging log.md...")
     subprocess.run([py, str(SCRIPT_DIR / "merge_log.py"),
                     "--upstream", str(rwh / "wiki" / "log.md"),
