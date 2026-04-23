@@ -7,7 +7,7 @@ from pathlib import Path
 
 import frontmatter
 
-HEADING_RE = re.compile(r"^##\s*\[(?P<date>\d{4}-\d{2}-\d{2})\]\s*—\s*(?P<title>.+)$")
+HEADING_RE = re.compile(r"^##\s*\[?(?P<date>\d{4}-\d{2}-\d{2})\]?\s*—\s*(?P<title>.+)$")
 THESIS_STATUS_RE = re.compile(r"^\s*-\s*\*\*Overall\*\*:\s*(?P<status>.+)$")
 CHECKED_ACTION_RE = re.compile(r"^\s*-\s*\[x\]\s*(?P<action>[^—\-\n]+?)(?:\s*—\s*(?P<detail>.+))?$")
 NEXT_REVIEW_RE = re.compile(r"^\s*\*\*Next review trigger\*\*:\s*(?P<trigger>.+)$")
