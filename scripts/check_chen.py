@@ -98,6 +98,7 @@ def main():
         print("  （无法自动解析具体条目，请手动对比源文件）")
 
     print(f"\n运行提示：告诉 Claude「chen.md 有更新，请同步到 chen-yun.md」即可。")
+    print(f"新日志文件将写入：{OVERLAY_DIR / 'wiki' / 'opinions' / 'chen-yun-log'}/")
     sys.exit(1)  # 非零退出码表示需要更新
 
 
