@@ -93,4 +93,38 @@ Any ONE of the following should prompt immediate reassessment:
 
 ---
 
+## 2026-04-24 — Opinion Signal: Yun Chen 微信群
+
+**Trigger**: chen.md 同步 — Chen 4/24 持续看多 POET
+**Source**: [chen-yun-log/2026-04-24](../../opinions/chen-yun-log/2026-04-24.md)
+
+### Chen 原话
+"机构持仓不愿意放弃；参考分享，POET 近年的大道"——继续持有逻辑不变
+
+### Thesis Status
+- **Overall**: Unchanged — 机构持仓信号值得关注，但无一手数据佐证
+- **BAIT delta**: B 面：群体情绪仍看多；I 面：机构持仓提及未经验证
+
+### Action
+- [x] Watch — 机构持仓说法需从 13F 等一手数据确认后才能纳入 BAIT I 面
+
+---
+
+## 2026-04-22 — Opinion Signal: Yun Chen 微信群（QUBT 关联）
+
+**Trigger**: chen.md 同步 — Chen 4/22 首推 QUBT 时点名 POET 为合作伙伴
+**Source**: [chen-yun-log/2026-04-22](../../opinions/chen-yun-log/2026-04-22.md)
+
+### Chen 原话
+"QUBT 的合作伙伴之一，正是我早前分享，这几天大涨的 POET。"
+
+### Thesis Status
+- **Overall**: Unchanged — QUBT 关联增加 POET 的生态位叙事；已在 POET thesis 中记录
+- **BAIT delta**: I 面微增：QUBT-POET 合作关系是公开信息，Chen 的提及放大了市场关注度
+
+### Action
+- [x] Watch — QUBT 关联可作为 POET 叙事强化信号；不影响 AVOID 结论，需等待 Q1 收入数据
+
+---
+
 *Future entries append below this line, newest-on-top.*

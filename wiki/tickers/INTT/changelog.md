@@ -211,4 +211,38 @@ Any ONE of the following should prompt immediate reassessment:
 
 ---
 
+## 2026-04-24 — Opinion Signal: Yun Chen 微信群
+
+**Trigger**: chen.md 同步 — Chen 4/24 将 INTT 回调定性为买入机会（晋升日当天）
+**Source**: [chen-yun-log/2026-04-24](../../opinions/chen-yun-log/2026-04-24.md)
+
+### Chen 原话
+"INTT 进入回调阶段，买入，持有"——建议长线持有几个月
+
+### Thesis Status
+- **Overall**: Unchanged — Chen 的"买入回调"与 wiki 的"AVOID 等待 Q1 财报"结论相反
+- **BAIT delta**: B 面：Chen 看多声音强化；反向信号 —— wiki 结论不变，等 5/4 Q1 财报
+
+### Action
+- [x] Watch — 关键催化剂仍为 Q1 2026 财报（5 月 4 日）；Chen 的乐观不改变事件前二元风险判断
+
+---
+
+## 2026-04-23 — Opinion Signal: Yun Chen 微信群
+
+**Trigger**: chen.md 同步 — Chen 4/23 提及 INTT 新高
+**Source**: [chen-yun-log/2026-04-23](../../opinions/chen-yun-log/2026-04-23.md)
+
+### Chen 原话
+"INTT 今天又上了，创造新高" 🔥🔥🔥🔥
+
+### Thesis Status
+- **Overall**: Unchanged — 价格创新高 + Chen 看多；但基本面验证仍待财报
+- **BAIT delta**: T 面：价格创新高强化了动量信号；但距财报仅 11 天，动量意义有限
+
+### Action
+- [x] Watch — 维持"等 Q1 财报"立场
+
+---
+
 *Future entries append below this line, newest-on-top.*

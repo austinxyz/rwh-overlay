@@ -17,6 +17,7 @@ from pathlib import Path
 OVERLAY_DIR = Path(__file__).parent.parent
 SOURCE = Path(r"C:\Users\lorra\projects\personal\stock\analysis\opinion\chen.md")
 WIKI   = OVERLAY_DIR / "wiki" / "opinions" / "chen-yun.md"
+TICKERS_DIR = OVERLAY_DIR / "wiki" / "tickers"
 
 
 def extract_latest_date_from_source(text: str) -> str:
@@ -96,6 +97,22 @@ def main():
             print(f"  • {d}：{preview}…")
     else:
         print("  （无法自动解析具体条目，请手动对比源文件）")
+
+    # 检测新日期中涉及的 overlay ticker
+    overlay_tickers = {p.name for p in TICKERS_DIR.iterdir() if p.is_dir()}
+    affected = {}  # ticker -> [date, ...]
+    for d in new_dates:
+        section = source_entries.get(d, "")
+        for tok in re.findall(r'\b([A-Z]{2,5})\b', section):
+            if tok in overlay_tickers:
+                affected.setdefault(tok, []).append(d)
+
+    if affected:
+        print(f"\n📋 需同步更新 changelog 的 ticker：")
+        for ticker, dates in sorted(affected.items()):
+            print(f"  • {ticker}/changelog.md — 涉及日期: {', '.join(dates)}")
+    else:
+        print(f"\n（新日期中无 overlay ticker 提及）")
 
     print(f"\n运行提示：告诉 Claude「chen.md 有更新，请同步到 chen-yun.md」即可。")
     print(f"新日志文件将写入：{OVERLAY_DIR / 'wiki' / 'opinions' / 'chen-yun-log'}/")

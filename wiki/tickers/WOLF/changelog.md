@@ -143,4 +143,38 @@ not to endorse his bullish framing at current price.
 
 ---
 
+## 2026-04-24 — Opinion Signal: Yun Chen 微信群
+
+**Trigger**: chen.md 同步 — Chen 4/24 继续强推 WOLF
+**Source**: [chen-yun-log/2026-04-24](../../opinions/chen-yun-log/2026-04-24.md)
+
+### Chen 原话
+"WOLF 是目前全球领先的碳化硅，在美国扩厂，知道的人赶早不赶晚。" 🔥
+
+### Thesis Status
+- **Overall**: Unchanged — 持续情绪信号，无新基本面数据
+- **BAIT delta**: B 面情绪强度维持高位；无 A/I/T 变化
+
+### Action
+- [x] Watch — Chen 高频重复强推是情绪信号；wiki 结论仍为"中性偏谨慎"，无新操作
+
+---
+
+## 2026-04-23 — Opinion Signal: Yun Chen 微信群
+
+**Trigger**: chen.md 同步 — Chen 4/23 继续看好 WOLF（同为晋升日）
+**Source**: [chen-yun-log/2026-04-23](../../opinions/chen-yun-log/2026-04-23.md)
+
+### Chen 原话
+"继续跟踪，每月持续分享，继续看好" 🔥
+
+### Thesis Status
+- **Overall**: Unchanged
+- **BAIT delta**: 无新信息；情绪维持
+
+### Action
+- [x] Watch
+
+---
+
 *Future entries append below this line, newest-on-top.*
