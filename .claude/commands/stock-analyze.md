@@ -103,6 +103,8 @@ After presenting all sections and getting user confirmation, proceed to Step 10.
 
 ### 10. Write wiki files
 
+Use YYYY-MM-DD format for all date placeholders (e.g. `[today's date]`) in file headers and changelog entries.
+
 Create or overwrite these files in `wiki/tickers/$ARGUMENTS/`:
 
 **`overview.md`**: Contains Sections A, B, E (technical), F (peers), G (sentiment). Header format:

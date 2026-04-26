@@ -12,7 +12,7 @@ Required: `<TICKER>` — the stock symbol to validate (e.g. `ATOM`, `WOLF`).
 
 Normalize `$ARGUMENTS` to uppercase.
 
-Search all files in `wiki/opinions/chen-yun-log/` for the ticker symbol `$ARGUMENTS`. Find the most recent log file (by filename date) that contains `$ARGUMENTS`. Read that file and extract:
+Search all files in `wiki/opinions/chen-yun-log/` for the ticker symbol `$ARGUMENTS`. Find the most recent log file (sort filenames alphabetically descending — YYYY-MM-DD names are chronological when sorted alphabetically, do NOT sort by modification time) that contains `$ARGUMENTS`. Read that file and extract:
 - Chen's exact words about `$ARGUMENTS`
 - Recommendation strength (count 🔥 emojis)
 
@@ -93,6 +93,8 @@ Present this structured summary to the user:
 - **配合**: ≥3 of the 5 dimensions show positive signals (偏多, Bullish, 突破, 看涨, 上调)
 - **背离**: ≥3 of the 5 dimensions show negative signals (偏空, Bearish, 下跌, 看跌, 下调)
 - **中性**: anything else
+
+Ask the user: "确认写回日志？" Wait for an explicit affirmative (e.g., 'yes', 'ok', '确认') before executing Step 8. If the user requests changes to the evaluation, revise and re-present Step 7.
 
 ### 8. Write results back to the log
 
