@@ -14,13 +14,13 @@ Read `raw/analyses/chen.md` in full.
 
 ### 2. Find the most recent processed date
 
-List all files in `wiki/opinions/chen-yun-log/` using glob pattern `wiki/opinions/chen-yun-log/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md`. Sort by filename descending to find the most recent date. Read that file to understand the last processed content.
+List all files in `wiki/opinions/chen-yun-log/` using glob pattern `wiki/opinions/chen-yun-log/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md`. Sort file paths alphabetically descending (YYYY-MM-DD filenames are chronological when sorted alphabetically — do NOT sort by file modification time) to find the most recent date. Read that file to understand the last processed content.
 
 If no log files exist, treat all content in `raw/analyses/chen.md` as new.
 
 ### 3. Identify new content
 
-Compare `raw/analyses/chen.md` against the last log entry. Identify content that has not yet been written to a log file — typically new dated sections or entries after the last processed date.
+Compare `raw/analyses/chen.md` against the last log entry. Identify content that has not yet been written to a log file. Detection rule: look for date markers in `raw/analyses/chen.md` (lines that start with `##` followed by a date, or clear date section headers like `#### YYYY-MM-DD` or `**YYYY年MM月DD日**`). Any date section in the raw file with a date AFTER the last log filename date is considered new content.
 
 Ask the user: "最新日志到 [last date in YYYY-MM-DD format]。将处理 [new date] 的内容，是否继续？" Wait for an affirmative reply (e.g., "yes", "好", "继续") before proceeding. If there is no new content, report "raw/analyses/chen.md 无新内容（上次处理至 [date]）" and stop.
 
@@ -46,7 +46,7 @@ Write `wiki/opinions/chen-yun-log/[NEW DATE IN YYYY-MM-DD FORMAT].md` with this 
 > [← 返回索引](../chen-yun.md)
 
 [One bullet per ticker, using this format:]
-- **[TICKER]**[——首次推荐 if applicable] [🔥 emoji count if any]："[Chen's exact words]"[；additional context if needed]
+- **[TICKER][——首次推荐 if applicable]** [🔥 emoji count if any]："[Chen's exact words]"[；additional context if needed]
 
 ---
 
