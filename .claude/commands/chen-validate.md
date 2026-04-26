@@ -15,7 +15,6 @@ Normalize `$ARGUMENTS` to uppercase.
 Search all files in `wiki/opinions/chen-yun-log/` for the ticker symbol `$ARGUMENTS`. Find the most recent log file (by filename date) that contains `$ARGUMENTS`. Read that file and extract:
 - Chen's exact words about `$ARGUMENTS`
 - Recommendation strength (count 🔥 emojis)
-- Observation type (首次推荐 / 加仓 / 持有 / etc.)
 
 If no log file mentions `$ARGUMENTS`, report: "未找到 $ARGUMENTS 的 Chen 记录。请先运行 `/chen-integrate`。" and stop.
 
