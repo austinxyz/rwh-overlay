@@ -2,13 +2,13 @@
 
 **Date**: 2026-04-25  
 **Owner**: austinxyz  
-**Status**: Approved
+**Status**: Approved (v2 — Skill + Python hybrid)
 
 ---
 
 ## 1. Problem Statement
 
-The user wants a daily automated market analysis stored as Markdown files in the existing `wiki/` structure and optionally pushed as a notification. The report should cover major US indices, sector performance, watchlist individual stocks, and market sentiment — scraped from external sources and published to the Quartz wiki via the existing sync pipeline.
+The user wants a daily automated market analysis stored as Markdown files in the existing `wiki/` structure and optionally pushed as a notification. The report should cover major US indices, sector performance, watchlist individual stocks, market sentiment, and AI-generated interpretation of the data — all without requiring a separate Claude API key.
 
 ## 2. Goals
 
@@ -16,72 +16,91 @@ The user wants a daily automated market analysis stored as Markdown files in the
 - **G2** Auto-discover watchlist tickers from existing `wiki/tickers/` directory.
 - **G3** Cover: major indices (SPY/QQQ/DJI), 10 SPDR sector ETFs, watchlist per-stock, Fear & Greed sentiment, top news headlines.
 - **G4** Any single data source failure degrades gracefully — the report is always written.
-- **G5** Optional webhook notification (Slack / WeCom compatible) via env var, zero code changes to enable.
-- **G6** Follows existing `scripts/gen_*.py` single-entrypoint pattern.
+- **G5** AI analysis (Claude) interprets the data: key drivers, sector rotation, watchlist highlights.
+- **G6** No separate API key required — runs within Claude Code subscription via Skill.
+- **G7** Manually triggered at first; `/schedule` automation added once stable.
 
 ## 3. Non-Goals
 
-- **NG1** No scheduling — script only; cron/Task Scheduler setup is out of scope for this spec.
-- **NG2** No LLM-generated analysis or commentary — raw data only.
+- **NG1** No standalone scheduling at launch — script + skill first, `/schedule` later.
+- **NG2** No LLM commentary on individual stock fundamentals — daily price/volume context only.
 - **NG3** No historical backfill automation — `--date` flag supports manual one-offs.
 - **NG4** No modification to `build_stock_kb.py` — daily market runs independently.
+- **NG5** No separate Claude API billing — analysis runs inside Claude Code session only.
 
 ## 4. Architecture
 
-### 4.1 File Layout
+### 4.1 Two-Layer Design
 
 ```
-scripts/
-  gen_daily_market.py          # entrypoint: orchestrates fetch + render
-  market/
-    __init__.py                # empty
-    yfinance_data.py           # price/volume data via yfinance
-    news_scraper.py            # news headlines via requests + BeautifulSoup
-    sentiment.py               # Fear & Greed index via CNN API
+Layer 1 — Data Collection (Python, deterministic, testable)
+  scripts/gen_daily_market.py      ← CLI entrypoint, outputs JSON to stdout
+  scripts/market/
+    __init__.py
+    yfinance_data.py               ← price/volume via yfinance
+    news_scraper.py                ← headlines via requests + BeautifulSoup
+    sentiment.py                   ← Fear & Greed via CNN API
 
-wiki/
-  market/
-    YYYY-MM-DD.md              # one file per trading day (permanent archive)
-    index.md                   # auto-generated index of recent 30 days
+Layer 2 — Analysis + Report Writing (Claude Code Skill)
+  .claude/skills/market-daily.md   ← skill: orchestrates fetch → analyze → write
 ```
 
-### 4.2 Data Flow
+### 4.2 Execution Flow
 
 ```
-gen_daily_market.py
-  ├── yfinance_data.py  → MarketSnapshot (indices, sectors, watchlist stocks)
-  ├── news_scraper.py   → list[NewsItem]
-  ├── sentiment.py      → SentimentResult
-  └── render_markdown() → wiki/market/YYYY-MM-DD.md
-  └── update_index()    → wiki/market/index.md
+User invokes /market-daily
+  ↓
+Skill: run python scripts/gen_daily_market.py [--date YYYY-MM-DD]
+  ↓
+Python outputs JSON to stdout:
+  {
+    "date": "2026-04-25",
+    "indices": [{"ticker": "SPY", "close": 512.3, "change": -4.2, "pct": -0.81}, ...],
+    "sectors": [{"name": "能源", "etf": "XLE", "pct": 1.2}, ...],
+    "watchlist": [{"ticker": "NVTS", "close": 3.21, "pct": 4.2, "vol_ratio": 1.8}, ...],
+    "sentiment": {"score": 42, "label": "Fear", "prev": 47},
+    "news": [{"title": "...", "url": "..."}]
+  }
+  ↓
+Claude reads JSON → analyzes data
+  - Identifies key index drivers
+  - Explains sector rotation signals
+  - Highlights watchlist movers
+  - Contextualizes news impact
+  ↓
+Claude writes wiki/market/YYYY-MM-DD.md
+Claude updates wiki/market/index.md
 ```
 
 ### 4.3 Module Responsibilities
 
-| Module | Input | Output | Does NOT |
-|--------|-------|--------|----------|
-| `yfinance_data.py` | ticker list, date | `MarketSnapshot` dataclass | write files |
-| `news_scraper.py` | (fixed Finviz URL) | `list[NewsItem]` | filter or rank |
-| `sentiment.py` | (fixed CNN API URL) | `SentimentResult` | interpret direction |
-| `gen_daily_market.py` | outputs of above | Markdown files | fetch data directly |
+| Component | Responsibility | Does NOT |
+|-----------|---------------|----------|
+| `yfinance_data.py` | Fetch price, volume, 20-day avg vol | Write files or interpret |
+| `news_scraper.py` | Scrape Finviz headlines + URLs | Rank or filter |
+| `sentiment.py` | Fetch CNN Fear & Greed score | Interpret direction |
+| `gen_daily_market.py` | Aggregate all data, output JSON to stdout | Write Markdown |
+| `market-daily.md` (skill) | Run script, analyze JSON, write Markdown | Fetch data directly |
 
 ### 4.4 Data Sources
 
 | Data | Source | Method |
 |------|--------|--------|
-| Index prices (SPY, QQQ, DJI) | Yahoo Finance | `yfinance` library |
+| Index prices (SPY, QQQ, ^DJI) | Yahoo Finance | `yfinance` library |
 | Sector ETF prices (XLK, XLE, XLF, XLV, XLI, XLB, XLU, XLRE, XLP, XLY) | Yahoo Finance | `yfinance` library |
 | Watchlist individual stocks | Yahoo Finance | `yfinance` library |
 | Volume ratio (vol / 20-day avg) | Yahoo Finance | `yfinance` library |
 | News headlines (top 5) | Finviz front page | `requests` + `BeautifulSoup` |
-| Fear & Greed index | CNN Fear & Greed API | `requests` (JSON response) |
+| Fear & Greed index | CNN Fear & Greed API | `requests` (JSON) |
 
-Watchlist tickers are auto-discovered by listing `wiki/tickers/` subdirectories — no separate config file needed.
+Watchlist tickers are auto-discovered by listing `wiki/tickers/` subdirectories.
 
 ## 5. Output Format
 
 ```markdown
-# 市场日报 · YYYY-MM-DD
+# 市场日报 · 2026-04-25
+
+*由 `/market-daily` skill 自动生成。*
 
 ## 市场情绪
 Fear & Greed: 42 (Fear) ↓ 昨日 47
@@ -102,41 +121,55 @@ Fear & Greed: 42 (Fear) ↓ 昨日 47
 |--------|------|--------|------|
 | NVTS   | 3.21 | +4.2%  | 1.8x |
 
-## 今日要闻（驱动因素）
-- [Headline text](url) — Finviz
+## 今日要闻
+- [Fed holds rates steady amid inflation uncertainty](url) — Finviz
+- [Nvidia leads chip stocks higher on AI demand](url) — Finviz
+
+## AI 解读
+
+**市场概况：** [Claude 对当日整体市场走势的简短分析，结合要闻解释指数涨跌原因]
+
+**板块轮动：** [Claude 解读板块强弱，是否有明显的避险/风险偏好信号]
+
+**Watchlist 亮点：** [Claude 点评当日 watchlist 中表现突出或异常的个股，结合量比]
 ```
 
 ## 6. Error Handling
 
-Each data source fails independently with graceful degradation:
+Each Python data source fails independently:
 
-- `yfinance_data.py` failure → affected table cells show `N/A`; report still written
-- `news_scraper.py` failure → news section shows `（今日新闻获取失败）`
-- `sentiment.py` failure → sentiment line shows `（数据不可用）`
+- `yfinance_data.py` failure → affected cells show `N/A` in JSON; skill renders `N/A` in table
+- `news_scraper.py` failure → `"news": []` in JSON; skill renders `（今日新闻获取失败）`
+- `sentiment.py` failure → `"sentiment": null` in JSON; skill renders `（数据不可用）`
 
-All errors print to stderr. Script always exits with code 0 to ensure the file is always generated (important for downstream sync pipeline).
+Python script always exits with code 0 and always emits valid JSON (with null fields on partial failure).
 
-## 7. CLI Interface
+If the Python script fails entirely, the skill catches the error, reports it, and does not write a partial file.
+
+## 7. CLI Interface (Python layer)
 
 ```bash
-# Generate today's report
+# Output today's data as JSON to stdout
 python scripts/gen_daily_market.py
 
-# Generate report for a specific date (backfill)
+# Output data for a specific date (backfill)
 python scripts/gen_daily_market.py --date 2026-04-24
-
-# Overwrite existing file
-python scripts/gen_daily_market.py --force
 ```
 
-## 8. Optional Notification
+The skill handles `--date` forwarding and file writing. No `--force` flag needed (skill controls overwrite behavior).
 
-After writing the Markdown file, the script checks for `NOTIFY_WEBHOOK` environment variable:
+## 8. Skill Interface
 
-- **Set** → POST a brief summary (index performance + F&G value) as JSON to the URL. Compatible with Slack incoming webhooks and WeCom (企业微信) bot webhooks.
-- **Not set** → silently skipped, no error.
+Skill file: `.claude/skills/market-daily.md`
 
-This allows enabling notifications at scheduling time via env var without any code changes.
+Invocation: `/market-daily` (optionally `/market-daily --date 2026-04-24`)
+
+The skill:
+1. Runs the Python fetch script
+2. Reads JSON output
+3. Analyzes with Claude
+4. Writes `wiki/market/YYYY-MM-DD.md`
+5. Updates `wiki/market/index.md` (last 30 days)
 
 ## 9. New Dependencies
 
@@ -150,4 +183,4 @@ beautifulsoup4>=4.12
 
 ## 10. Integration with Existing Pipeline
 
-`gen_daily_market.py` is a standalone script. It writes to `wiki/market/` which is picked up by the existing Syncthing sync to NAS and served by Quartz — no changes needed to `build_stock_kb.py` or the Quartz config.
+`gen_daily_market.py` is standalone. `wiki/market/` is picked up by Syncthing to NAS and served by Quartz — no changes needed to `build_stock_kb.py` or Quartz config.
