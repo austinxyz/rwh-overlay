@@ -2,14 +2,11 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 import pytest
 from scripts.market.yfinance_data import StockQuote, MarketSnapshot
 from scripts.market.news_scraper import NewsItem
 from scripts.market.sentiment import SentimentResult
-
-# Add scripts/ to path so gen_daily_market can be imported as a top-level module
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 import gen_daily_market as gdm
 
 
@@ -31,6 +28,7 @@ def test_build_payload_structure():
     assert len(payload["indices"]) == 1
     assert payload["indices"][0]["ticker"] == "SPY"
     assert len(payload["sectors"]) == 1
+    assert payload["sectors"][0]["name"] == "科技"   # XLK → 科技
     assert len(payload["watchlist"]) == 1
     assert payload["watchlist"][0]["vol_ratio"] == 1.8
     assert payload["sentiment"]["score"] == 42
