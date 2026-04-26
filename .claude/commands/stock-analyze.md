@@ -10,7 +10,9 @@ Required: `<TICKER>` — the stock symbol to analyze (e.g. `POET`, `NVDA`).
 
 ### 1. Confirm ticker and check existing wiki
 
-Check if `wiki/tickers/$ARGUMENTS/` already exists. If it does, read the existing `overview.md` and `thesis.md` so you understand the current state before updating. Tell the user what you found ("Existing analysis found from [date]" or "No existing analysis — starting fresh").
+Normalize `$ARGUMENTS` to uppercase before use in all file paths and headers (e.g., `nvda` → `NVDA`).
+
+Check if `wiki/tickers/$ARGUMENTS/` already exists. If it does, read the existing `overview.md`, `thesis.md`, and `financials.md` so you understand the current state before updating. Tell the user what you found ("Existing analysis found from [date]" or "No existing analysis — starting fresh").
 
 ### 2. Fetch fundamental data
 
@@ -65,7 +67,7 @@ Use the `stock-liquidity` skill to assess:
 
 ### 9. Synthesize and present draft
 
-Present the analysis in sections, one at a time, asking for user confirmation after each section before proceeding. Sections follow the upstream thesis framework:
+Present the analysis in sections, one at a time. After presenting each section, wait for the user to reply with an affirmative (e.g., "ok", "next", "yes", "好", or any positive response) before presenting the next section. If the user requests changes to a section, revise it and re-present before moving on. Do not skip ahead. Sections follow the upstream thesis framework:
 
 **Section A — Business Overview**: What the company does, sector/industry, asset type (growth/value/speculative), one-line moat description.
 
@@ -103,7 +105,7 @@ After presenting all sections and getting user confirmation, proceed to Step 10.
 
 Create or overwrite these files in `wiki/tickers/$ARGUMENTS/`:
 
-**`overview.md`**: Contains Sections A, B, E (technical), G (sentiment). Header format:
+**`overview.md`**: Contains Sections A, B, E (technical), F (peers), G (sentiment). Header format:
 ```
 # $ARGUMENTS — [Company Full Name]
 
@@ -117,8 +119,12 @@ Create or overwrite these files in `wiki/tickers/$ARGUMENTS/`:
 # $ARGUMENTS — Investment Thesis
 
 **Last updated**: [today's date]
+**Ticker**: $ARGUMENTS
+**Status**: [Active/Watch/Avoid]
 **Language**: English | [中文](thesis.zh.md)
 ```
+
+Match the header fields used in any existing thesis.md files in the repo for consistency.
 
 **`financials.md`**: Contains Sections C, D, H (estimates, earnings, liquidity) plus full financial tables from Step 2. Header format:
 ```
@@ -126,6 +132,14 @@ Create or overwrite these files in `wiki/tickers/$ARGUMENTS/`:
 
 **Last updated**: [today's date]
 **Language**: English | [中文](financials.zh.md)
+```
+
+**`changelog.md`**: If it already exists, append a new entry at the top (newest-first) with today's date and a one-line summary of what was analyzed or updated. If it does not exist, create it with a single initial entry. Entry format:
+
+```markdown
+## [TODAY'S DATE] — Initial Analysis (via /stock-analyze)
+
+[One-line summary of key finding, e.g., "Stage 2 breakout candidate; Q2 2026 revenue ramp is the pivotal catalyst"]
 ```
 
 ### 11. Write Chinese translations
