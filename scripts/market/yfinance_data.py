@@ -1,7 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
+import logging
 import sys
 import yfinance as yf
+
+logger = logging.getLogger(__name__)
 
 INDICES = ["SPY", "QQQ", "^DJI"]
 
@@ -12,7 +15,7 @@ SECTORS = {
 }
 
 
-@dataclass
+@dataclass(frozen=True)
 class StockQuote:
     ticker: str
     close: float
@@ -36,19 +39,22 @@ def fetch_quote(ticker: str) -> StockQuote | None:
         prev = float(info["regularMarketPreviousClose"])
         vol = int(info.get("regularMarketVolume", 0))
         avg_vol = int(info.get("averageVolume", 1)) or 1
+        if not prev:
+            logger.warning(f"zero prev_close for {ticker}")
+            return None
         change = close - prev
         pct = round(change / prev * 100, 2)
         vol_ratio = round(vol / avg_vol, 2)
         return StockQuote(ticker=ticker, close=close, change=round(change, 2), pct=pct, vol_ratio=vol_ratio)
     except Exception as e:
-        print(f"WARN: failed to fetch {ticker}: {e}", file=sys.stderr)
+        logger.warning(f"failed to fetch {ticker}: {e}")
         return None
 
 
 def fetch_quotes(tickers: list[str]) -> list[StockQuote]:
     results = []
-    for t in tickers:
-        q = fetch_quote(t)
+    for ticker in tickers:
+        q = fetch_quote(ticker)
         if q:
             results.append(q)
     return results
@@ -59,11 +65,9 @@ def fetch_snapshot(
     sector_tickers: list[str],
     watchlist_tickers: list[str],
 ) -> MarketSnapshot:
-    snap = MarketSnapshot()
-    for t in index_tickers:
-        q = fetch_quote(t)
-        if q:
-            snap.indices.append(q)
-    snap.sectors = fetch_quotes(sector_tickers)
-    snap.watchlist = fetch_quotes(watchlist_tickers)
-    return snap
+    indices = [q for t in index_tickers if (q := fetch_quote(t))]
+    return MarketSnapshot(
+        indices=indices,
+        sectors=fetch_quotes(sector_tickers),
+        watchlist=fetch_quotes(watchlist_tickers),
+    )
