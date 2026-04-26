@@ -23,6 +23,10 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 
 DERIVED_FILES = {"index.md", "watchlist.md", "log.md"}
 
+# Overlay always wins for these filenames — the overlay version is the
+# merged superset (contains upstream entries + overlay-specific entries).
+OVERLAY_WINS = {"changelog.md", "changelog.zh.md"}
+
 
 def env_path(name: str, default: Path) -> Path:
     val = os.environ.get(name)
@@ -53,12 +57,12 @@ def clean_output(output: Path) -> None:
 
 
 def copy_tree_excluding_derived(src: Path, dst: Path) -> None:
-    """Copy src -> dst recursively, skipping index.md/watchlist.md/log.md at any depth."""
+    """Copy src -> dst recursively, skipping derived files only at the wiki root."""
     for root, _dirs, files in os.walk(src):
         rel = Path(root).relative_to(src)
         (dst / rel).mkdir(parents=True, exist_ok=True)
         for name in files:
-            if name in DERIVED_FILES:
+            if rel == Path(".") and name in DERIVED_FILES:
                 continue
             shutil.copy2(Path(root) / name, dst / rel / name)
 
@@ -76,12 +80,12 @@ def overlay_copy_with_skip(overlay_wiki: Path, output_wiki: Path) -> tuple[list[
         rel_dir = Path(root).relative_to(overlay_wiki)
         (output_wiki / rel_dir).mkdir(parents=True, exist_ok=True)
         for name in files:
-            if name in DERIVED_FILES:
+            if rel_dir == Path(".") and name in DERIVED_FILES:
                 continue
             rel = rel_dir / name
             src = Path(root) / name
             dst = output_wiki / rel
-            if dst.exists():
+            if dst.exists() and name not in OVERLAY_WINS:
                 skipped.append(rel)
             else:
                 shutil.copy2(src, dst)
@@ -140,16 +144,23 @@ def copy_claude(rwh: Path, overlay: Path, output: Path) -> None:
 
 
 def generate_derived(py: str, rwh: Path, overlay: Path, output: Path) -> None:
-    print("Generating index.md (en)...")
-    subprocess.run([py, str(SCRIPT_DIR / "gen_index.py"),
-                    "--wiki-root", str(output / "wiki"),
-                    "--output", str(output / "wiki" / "index.md"),
-                    "--lang", "en"], check=True)
-    print("Generating index.zh.md...")
-    subprocess.run([py, str(SCRIPT_DIR / "gen_index.py"),
-                    "--wiki-root", str(output / "wiki"),
-                    "--output", str(output / "wiki" / "index.zh.md"),
-                    "--lang", "zh"], check=True)
+    upstream_index = rwh / "wiki" / "index.md"
+    print("Generating index.md (en, upstream-base)...")
+    cmd = [py, str(SCRIPT_DIR / "gen_index.py"),
+           "--wiki-root", str(output / "wiki"),
+           "--output", str(output / "wiki" / "index.md"),
+           "--lang", "en"]
+    if upstream_index.is_file():
+        cmd += ["--upstream-index", str(upstream_index)]
+    subprocess.run(cmd, check=True)
+    print("Generating index.zh.md (upstream-base + zh overlay)...")
+    cmd_zh = [py, str(SCRIPT_DIR / "gen_index.py"),
+              "--wiki-root", str(output / "wiki"),
+              "--output", str(output / "wiki" / "index.zh.md"),
+              "--lang", "zh"]
+    if upstream_index.is_file():
+        cmd_zh += ["--upstream-index", str(upstream_index)]
+    subprocess.run(cmd_zh, check=True)
     print("Generating watchlist.md (en)...")
     subprocess.run([py, str(SCRIPT_DIR / "gen_watchlist.py"),
                     "--wiki-root", str(output / "wiki"),
@@ -165,6 +176,16 @@ def generate_derived(py: str, rwh: Path, overlay: Path, output: Path) -> None:
                     "--upstream", str(rwh / "wiki" / "log.md"),
                     "--overlay",  str(overlay / "overlay-log.md"),
                     "--output",   str(output / "wiki" / "log.md")], check=True)
+    print("Generating home index.md (en)...")
+    subprocess.run([py, str(SCRIPT_DIR / "gen_home.py"),
+                    "--wiki-root", str(output / "wiki"),
+                    "--output", str(output / "index.md"),
+                    "--lang", "en"], check=True)
+    print("Generating home index.zh.md...")
+    subprocess.run([py, str(SCRIPT_DIR / "gen_home.py"),
+                    "--wiki-root", str(output / "wiki"),
+                    "--output", str(output / "index.zh.md"),
+                    "--lang", "zh"], check=True)
 
 
 def main() -> int:

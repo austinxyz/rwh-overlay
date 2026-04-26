@@ -193,6 +193,9 @@ def collect(wiki_root: Path, lang: str):
     for ticker_dir in sorted(tickers_dir.iterdir()):
         overview = ticker_dir / "overview.md"
         if not overview.is_file():
+            # Upstream tickers use TICKER.md instead of overview.md.
+            overview = ticker_dir / f"{ticker_dir.name}.md"
+        if not overview.is_file():
             continue
         post = frontmatter.loads(overview.read_text(encoding="utf-8"))
         entry = parse_latest_entry(pick_changelog(ticker_dir, lang))
