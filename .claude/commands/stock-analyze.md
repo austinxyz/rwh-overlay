@@ -133,7 +133,10 @@ Create or overwrite these files in `wiki/tickers/$ARGUMENTS/`:
 For each of `overview.md`, `thesis.md`, `financials.md`, create the corresponding `.zh.md` file with:
 - Same structure and data as the English version
 - All prose translated to Chinese
-- Header includes: `**语言**: 中文 | [English](overview.md)`
+- Each file's header includes a back-link to its English counterpart:
+  - `overview.zh.md`: `**语言**: 中文 | [English](overview.md)`
+  - `thesis.zh.md`: `**语言**: 中文 | [English](thesis.md)`
+  - `financials.zh.md`: `**语言**: 中文 | [English](financials.md)`
 
 ### 12. Confirm completion
 
