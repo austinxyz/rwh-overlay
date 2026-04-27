@@ -5,6 +5,25 @@ Per-ticker change log documenting thesis evolution and action triggers.
 
 ---
 
+## [2026-04-26] — Entry Analysis (via /stock-entry)
+
+**入场区间：** $9.00–$11.50（情景 A 回调）| **止损：** $8.30（–8%）| **目标 1：** $15.10 | **目标 2：** $20–22
+**Setup：** Stage 2，HTF 旗杆（旗面未形成）| ⚠️ 当前 $15.10 不可操作；财报 5/14 前不建仓
+**File：** [entry-2026-04-26.md](entry-2026-04-26.md)
+
+---
+
+## [2026-04-26] — Full Refresh (via /stock-analyze)
+
+New 52-week high at $15.10 (+18.2% since 4/22 analysis); stock +125% in 10 days
+from $6.71 low on 4/14. PW EV revised to ~$12.33 — stock now 23% above fair
+value. Bear probability raised to 35%; bull lowered to 25%. May 14 Q1 earnings
+(revenue ~$348K expected) identified as primary near-term risk ("sell the news"
+after parabolic advance). SEPA: Stage 2, all 8 trend template pass, but +121%
+above 50MA — no valid entry. Recommendation: Avoid new entries at $15.10.
+
+---
+
 ## [2026-04-22] — Initial Thesis (Promoted from opinions/chen-yun.md)
 
 **Trigger**: User requested continued pilot of speculative-tier promotions

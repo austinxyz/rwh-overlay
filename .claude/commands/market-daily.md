@@ -28,9 +28,7 @@ If the script exits non-zero or produces no output, stop and report the error. D
 
 Check if `wiki/market/<DATE>.md` already exists. If it does, ask the user whether to overwrite before proceeding.
 
-### 4. Fetch social sentiment (weekday only)
-
-Skip this step on weekends.
+### 4. Fetch social sentiment (always)
 
 Use the `finance-sentiment` skill to get **overall market** social sentiment:
 - Reddit market sentiment (r/wallstreetbets, r/stocks, r/investing) — overall bullish/bearish signal today
@@ -38,7 +36,7 @@ Use the `finance-sentiment` skill to get **overall market** social sentiment:
 - News sentiment for major indices (S&P 500, Nasdaq)
 - Overall signal: Bullish / Neutral / Bearish
 
-Also run `finance-sentiment` for any watchlist tickers that had notable moves (>2% or vol_ratio >1.5x from Step 2 data).
+On weekdays only: also run `finance-sentiment` for any watchlist tickers that had notable moves (>2% or vol_ratio >1.5x from Step 2 data). Skip per-ticker sentiment on weekends (no fresh market move to anchor it).
 
 ### 5. Query options flow and darkpool signals (weekday only)
 
@@ -83,40 +81,41 @@ Include only tickers with ≥3/4 dimensions passing. If none qualify, write "本
 
 ### 7. Analyze the data
 
-**If it is a weekday**, write the AI analysis with these sections:
+**If it is a weekday**, write the AI analysis with these sections, each using bullet points (not prose paragraphs):
 
 **市场概况 (Market Overview):**
-- What happened to the major indices today? Up or down, by how much?
-- Connect the move to the news headlines. What macro event, earnings, or Fed signal explains the direction?
-- Keep to 2-3 sentences.
+- One bullet: indices direction + magnitude
+- One bullet: macro driver connecting the move to news/earnings/Fed
+- e.g. "SPY +0.8%，QQQ +1.9%：科技财报超预期带动纳指领涨"
 
 **板块轮动 (Sector Rotation):**
-- Which sectors led and which lagged?
-- Is the pattern risk-on (tech/growth leading) or risk-off (utilities/staples leading)?
-- Any notable divergence between sectors?
-- Keep to 2-3 sentences.
+- One bullet: top sectors with pct
+- One bullet: lagging sectors with pct
+- One bullet: risk-on / risk-off 判断 + 有无明显异常
 
 **Watchlist 亮点 (Watchlist Highlights):**
-- Which watchlist tickers moved significantly (>2% or vol_ratio >1.5x)?
-- For each notable mover, 1 sentence: what moved it and whether it aligns with the thesis.
-- If no watchlist tickers moved significantly, say so briefly.
+- One bullet per notable mover (>2% or vol_ratio >1.5x): TICKER±X% — 原因 — 是否符合论点
+- If none: "今日 watchlist 无显著异动"
 
 **市场异常信号 (Anomaly Signals):**
-- Summarize key options flow and darkpool findings from Steps 5–6.
-- If no signals, write "本日无显著异常信号".
-- Keep to 2-3 sentences.
+- One bullet per notable options flow or darkpool signal
+- If none: "本日无显著异常信号"
 
 **社交情绪 (Social Sentiment):**
-- Overall market social sentiment from Step 4.
-- Any notable shift in retail sentiment vs the prior reading.
-- Keep to 1-2 sentences.
+- One bullet per platform with notable reading
+- One bullet: overall signal vs. prior day / F&G alignment
 
-**If it is a weekend**, write the analysis with one section:
+**If it is a weekend**, write the analysis with two sections, each using bullet points (not prose paragraphs):
 
 **周末要闻解读 (Weekend News Commentary):**
-- Summarize the key themes across the news headlines.
-- What macro risks or opportunities do these stories suggest for the coming week?
-- Keep to 3-4 sentences.
+- One bullet per key news theme (2-4 bullets)
+- Each bullet: theme → implication for next week
+- e.g. "伊朗和谈停滞 → 油价溢价可能持续，XLE 值得关注"
+
+**社交情绪 (Social Sentiment):**
+- One bullet per notable platform signal or theme (2-3 bullets)
+- e.g. "X.com：AAPL/NVDA 情绪偏多，科技主线明显"
+- Close with one bullet summarizing overall retail mood vs. F&G reading
 
 ### 8. Write the report
 
@@ -192,7 +191,7 @@ Fear & Greed: <score> (<label>) <direction_arrow> 昨日 <prev>
 ```markdown
 # 市场日报 · <DATE>（非交易日）
 
-*由 `/market-daily` 自动生成。周末无行情数据，仅展示要闻与情绪。*
+*由 `/market-daily` 自动生成。周末无行情数据，展示要闻与社交情绪。*
 
 ## 市场情绪
 Fear & Greed: <score> (<label>) <direction_arrow> 昨日 <prev>
@@ -203,11 +202,21 @@ Fear & Greed: <score> (<label>) <direction_arrow> 昨日 <prev>
 
 ## 周末要闻
 （新闻为空时写：`（今日新闻获取失败）`）
-- [<title>](<url>) — Finviz
+- [<title>](<url>) — 来源
+
+## 社交情绪
+| 平台 | 信号 | 主要话题 |
+|------|------|---------|
+| Reddit | Bullish / Neutral / Bearish | <主要讨论主题> |
+| X.com | Bullish / Neutral / Bearish | <主要讨论主题> |
+| 新闻情绪 | Bullish / Neutral / Bearish | <主要新闻情绪方向> |
+| **综合** | **Bullish / Neutral / Bearish** | |
 
 ## AI 解读
 
 **周末要闻解读：** <3-4 sentences summarizing themes and implications for next week>
+
+**社交情绪：** <1-2 sentences on overall retail mood and any notable discussion heading into next week>
 ```
 
 Direction arrow rules: if `score > prev`, use `↑`; if `score < prev`, use `↓`; if equal, omit arrow.
