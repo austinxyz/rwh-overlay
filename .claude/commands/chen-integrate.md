@@ -78,7 +78,36 @@ Wait for user response. Do not auto-execute `/chen-validate`.
 
 If no tickers met the threshold, skip this step and go directly to Step 7.
 
-### 7. Confirm completion
+### 7. Update `wiki/opinions/chen-yun.md`
+
+Read `wiki/opinions/chen-yun.md`. Make the following three changes in order:
+
+**7a — Update header metadata (top of file):**
+Find the two lines:
+```
+> **捕获日期范围**: YYYY-MM-DD → [old date]
+> **最后导入**: [old date]
+```
+Replace `[old date]` in both lines with the new date being processed (YYYY-MM-DD format).
+
+**7b — Prepend new row(s) to the 时间线日志 table:**
+Find the table that starts with `| 日期 | 周几 | 关键标的 / 事件 |`. Insert one new row per new date processed, immediately after the header rows (`| --- |` separator line), newest date first. Row format:
+```
+| [YYYY-MM-DD](chen-yun-log/YYYY-MM-DD.md) | [weekday] | [2–4 key ticker/event highlights from that day's log] |
+```
+Highlights should name tickers with first-push (首推), validated (✅), or thematically notable events. Keep each cell under 80 characters.
+
+**7c — Add new tickers to 股票索引 table:**
+Find the table that starts with `| 股票 | 赛道 | 首次提及 | 他的描述 / 价格信号 |`. For each ticker that is a **首次推荐** in today's log (i.e., first appearance across all log files), prepend a new row at the top of the table:
+```
+| [TICKER] | [lane/sector] | [date] | [Chen's description + any validation result if already done] |
+```
+Also update any existing ticker rows where today's log adds material new information (e.g., a price validation, a 复盘 confirmation, a thesis change).
+
+Do NOT re-add tickers that already have rows in the 股票索引.
+
+### 8. Confirm completion
 
 Report: "Chen 日志已写入：`wiki/opinions/chen-yun-log/[DATE].md`
+chen-yun.md 已同步更新（元数据 + 时间线 + 股票索引）
 [N] 个 ticker 待验证：[comma-separated list, or '无' if none]"
