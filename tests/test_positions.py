@@ -95,3 +95,36 @@ def test_read_returns_none_when_file_missing(monkeypatch):
         monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
 
         assert positions.read("POET") is None
+
+
+def test_list_active_returns_all_active(monkeypatch):
+    """list_active() returns all rows with status=Active."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(
+            ticker="POET", shares=500, avg_cost=11.20, entry_date="2026-04-15",
+            stop=9.50, target1=14.00, target2=18.00, status="Active"))
+        positions.add(positions.Position(
+            ticker="INTT", shares=200, avg_cost=14.50, entry_date="2026-04-10",
+            stop=12.00, target1=16.00, target2=20.00, status="Active"))
+        positions.add(positions.Position(
+            ticker="WOLF", shares=100, avg_cost=25.00, entry_date="2026-03-15",
+            stop=20.00, target1=30.00, target2=35.00, status="Watching"))
+
+        active = positions.list_active()
+        tickers = [p.ticker for p in active]
+        assert "POET" in tickers
+        assert "INTT" in tickers
+        assert "WOLF" not in tickers  # status=Watching, not Active
+        assert len(active) == 2
+
+
+def test_list_active_empty_when_file_missing(monkeypatch):
+    """list_active() returns [] when file doesn't exist."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        assert positions.list_active() == []

@@ -162,5 +162,10 @@ def read(ticker: str) -> Position | None:
     return None
 
 
+def list_active() -> list[Position]:
+    """Return all positions with Active or Trimmed status."""
+    return [p for p in _iter_active_rows() if p.status in ("Active", "Trimmed")]
+
+
 if __name__ == "__main__":
     print("positions.py — see --help")
