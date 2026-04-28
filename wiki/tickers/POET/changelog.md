@@ -5,6 +5,14 @@ Per-ticker change log documenting thesis evolution and action triggers.
 
 ---
 
+## [2026-04-27] — Entry Analysis (via /stock-entry)
+
+**入场区间：** $7.00–$7.50 | **止损：** $6.20（-14%）| **目标 1：** $10.00 | **目标 2：** $13.00
+**Setup：** Not Ready — 抛物线顶部回落，4.68x 放量暴跌（$15.10→$8.14），等待量能衰竭后 50MA 附近建仓
+**File：** [entry-2026-04-27.md](entry-2026-04-27.md)
+
+---
+
 ## [2026-04-26] — Entry Analysis (via /stock-entry)
 
 **入场区间：** $9.00–$11.50（情景 A 回调）| **止损：** $8.30（–8%）| **目标 1：** $15.10 | **目标 2：** $20–22

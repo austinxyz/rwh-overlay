@@ -21,7 +21,8 @@ from market.yfinance_data import fetch_snapshot, INDICES, SECTORS
 from market.news_scraper import fetch_news
 from market.sentiment import fetch_sentiment
 
-DEFAULT_WIKI = SCRIPT_DIR.parent / "wiki"
+_STOCK_KB_WIKI = SCRIPT_DIR.parent.parent / "stock-kb" / "wiki"
+DEFAULT_WIKI = _STOCK_KB_WIKI if _STOCK_KB_WIKI.is_dir() else SCRIPT_DIR.parent / "wiki"
 
 
 def discover_watchlist(tickers_dir: Path) -> list[str]:

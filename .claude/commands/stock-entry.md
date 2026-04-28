@@ -47,9 +47,11 @@ Query the unusual_whales Telegram bot (Chat ID: 5241900942) for recent messages:
 
 ```bash
 tdl chat export -c 5241900942 -T last -i 5 --all --with-content -o ~/tdl-exports/uw_entry.json
+py scripts/read_uw_bot.py --path ~/tdl-exports/uw_entry.json --ticker $ARGUMENTS --limit 5
+py scripts/read_uw_bot.py --path ~/tdl-exports/uw_entry.json --section flow --limit 5
 ```
 
-Read `~/tdl-exports/uw_entry.json` and extract any relevant data for `$ARGUMENTS`. Also note: the user can manually send `/max_pain $ARGUMENTS` and `/oi_strike $ARGUMENTS` to the bot in the Telegram app for precise OI data.
+Extract any relevant data for `$ARGUMENTS` from helper output. Also note: the user can manually send `/max_pain $ARGUMENTS` and `/oi_strike $ARGUMENTS` to the bot in the Telegram app for precise OI data.
 
 Report:
 - Max pain strike for the nearest expiry (if available from bot data)

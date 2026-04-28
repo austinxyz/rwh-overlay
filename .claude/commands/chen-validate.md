@@ -52,9 +52,11 @@ Query the unusual_whales Telegram bot (Chat ID: 5241900942):
 
 ```bash
 tdl chat export -c 5241900942 -T last -i 5 --all --with-content -o ~/tdl-exports/uw_validate.json
+py scripts/read_uw_bot.py --path ~/tdl-exports/uw_validate.json --ticker $ARGUMENTS --limit 5
+py scripts/read_uw_bot.py --path ~/tdl-exports/uw_validate.json --section flow --limit 5
 ```
 
-Read `~/tdl-exports/uw_validate.json` and look for any references to `$ARGUMENTS`. Note: the user can also manually send `/darkpool_ticker $ARGUMENTS` and `/flow_alerts $ARGUMENTS` to the bot in the Telegram app for fresher data.
+Look for any references to `$ARGUMENTS` in the helper output. Note: the user can also manually send `/darkpool_ticker $ARGUMENTS` and `/flow_alerts $ARGUMENTS` to the bot in the Telegram app for fresher data.
 
 Classify: 异常（大宗看涨）/ 异常（大宗看跌）/ 正常
 
