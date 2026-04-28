@@ -2,6 +2,7 @@
 from pathlib import Path
 import sys
 import tempfile
+import json
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
@@ -248,3 +249,47 @@ def test_close_computes_pnl_correctly(monkeypatch):
         # P&L % = (32/25.5 - 1) * 100 = 25.49%
         assert "$1300" in content or "1300" in content
         assert "+25.5%" in content or "25.5%" in content
+
+
+# CLI integration tests
+def test_cli_read_returns_json(monkeypatch, tmp_path):
+    """CLI read returns JSON to stdout."""
+    import subprocess
+    import os
+
+    fake_file = tmp_path / "positions.md"
+
+    # Pre-populate via Python API (uses monkeypatch)
+    monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+    positions.add(positions.Position(ticker="POET", shares=500, avg_cost=11.20,
+                                      entry_date="2026-04-15", status="Active"))
+
+    # Run CLI subprocess
+    script = REPO_ROOT / "scripts" / "positions.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "read", "--ticker", "POET"],
+        env={**os.environ, "POSITIONS_FILE": str(fake_file), "PYTHONUTF8": "1"},
+        capture_output=True, text=True, encoding="utf-8",
+    )
+    assert result.returncode == 0, f"stderr: {result.stderr}"
+    data = json.loads(result.stdout)
+    assert data["ticker"] == "POET"
+    assert data["shares"] == 500
+
+
+def test_cli_read_missing_returns_null(tmp_path):
+    """CLI read prints 'null' for missing ticker."""
+    import subprocess
+    import os
+
+    fake_file = tmp_path / "positions.md"
+    fake_file.write_text(positions.TEMPLATE.format(date="2026-04-28"), encoding="utf-8")
+
+    script = REPO_ROOT / "scripts" / "positions.py"
+    result = subprocess.run(
+        [sys.executable, str(script), "read", "--ticker", "NOTHERE"],
+        env={**os.environ, "POSITIONS_FILE": str(fake_file), "PYTHONUTF8": "1"},
+        capture_output=True, text=True, encoding="utf-8",
+    )
+    assert result.returncode == 0, f"stderr: {result.stderr}"
+    assert result.stdout.strip() == "null"

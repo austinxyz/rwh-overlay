@@ -273,5 +273,97 @@ def close(ticker: str, avg_exit: float, reason: str, closed_date: str) -> None:
     POSITIONS_FILE.write_text(new_active + new_closed, encoding="utf-8")
 
 
+def _resolve_positions_file() -> None:
+    """Allow override via env var POSITIONS_FILE (used in tests)."""
+    import os
+    global POSITIONS_FILE
+    env_path = os.environ.get("POSITIONS_FILE")
+    if env_path:
+        POSITIONS_FILE = Path(env_path)
+
+
+def _cmd_read(args) -> None:
+    pos = read(args.ticker)
+    print(json.dumps(asdict(pos)) if pos else "null")
+
+
+def _cmd_list(args) -> None:
+    positions_list = list_active()
+    if args.status:
+        positions_list = [p for p in positions_list if p.status == args.status]
+    print(json.dumps([asdict(p) for p in positions_list], indent=2))
+
+
+def _cmd_add(args) -> None:
+    pos = Position(
+        ticker=args.ticker.upper(), shares=args.shares, avg_cost=args.avg_cost,
+        entry_date=args.entry_date, stop=args.stop,
+        target1=args.target1, target2=args.target2,
+        status=args.status, notes=args.notes or "",
+    )
+    add(pos)
+    print(json.dumps({"ok": True, "added": asdict(pos)}))
+
+
+def _cmd_update(args) -> None:
+    fields = {k: v for k, v in vars(args).items()
+              if k in {"shares", "avg_cost", "stop", "target1", "target2", "status", "notes"}
+              and v is not None}
+    update(args.ticker, **fields)
+    print(json.dumps({"ok": True, "ticker": args.ticker.upper(), "updated": fields}))
+
+
+def _cmd_close(args) -> None:
+    close(args.ticker, args.avg_exit, args.reason, args.closed_date)
+    print(json.dumps({"ok": True, "ticker": args.ticker.upper(), "closed": True}))
+
+
+def main() -> None:
+    _resolve_positions_file()
+    ap = argparse.ArgumentParser(description=__doc__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    p_read = sub.add_parser("read", help="Read single ticker position")
+    p_read.add_argument("--ticker", required=True)
+    p_read.set_defaults(func=_cmd_read)
+
+    p_list = sub.add_parser("list", help="List active positions")
+    p_list.add_argument("--status", help="Filter by status (Active/Trimmed/Watching)")
+    p_list.set_defaults(func=_cmd_list)
+
+    p_add = sub.add_parser("add", help="Add new position")
+    p_add.add_argument("--ticker", required=True)
+    p_add.add_argument("--shares", type=int, required=True)
+    p_add.add_argument("--avg-cost", type=float, required=True, dest="avg_cost")
+    p_add.add_argument("--entry-date", required=True, dest="entry_date")
+    p_add.add_argument("--stop", type=float)
+    p_add.add_argument("--target1", type=float)
+    p_add.add_argument("--target2", type=float)
+    p_add.add_argument("--status", default="Active")
+    p_add.add_argument("--notes", default="")
+    p_add.set_defaults(func=_cmd_add)
+
+    p_upd = sub.add_parser("update", help="Update active position fields")
+    p_upd.add_argument("--ticker", required=True)
+    p_upd.add_argument("--shares", type=int)
+    p_upd.add_argument("--avg-cost", type=float, dest="avg_cost")
+    p_upd.add_argument("--stop", type=float)
+    p_upd.add_argument("--target1", type=float)
+    p_upd.add_argument("--target2", type=float)
+    p_upd.add_argument("--status")
+    p_upd.add_argument("--notes")
+    p_upd.set_defaults(func=_cmd_update)
+
+    p_cls = sub.add_parser("close", help="Close active position")
+    p_cls.add_argument("--ticker", required=True)
+    p_cls.add_argument("--avg-exit", type=float, required=True, dest="avg_exit")
+    p_cls.add_argument("--reason", required=True)
+    p_cls.add_argument("--closed-date", required=True, dest="closed_date")
+    p_cls.set_defaults(func=_cmd_close)
+
+    args = ap.parse_args()
+    args.func(args)
+
+
 if __name__ == "__main__":
-    print("positions.py — see --help")
+    main()
