@@ -102,5 +102,65 @@ def add(pos: Position) -> None:
     POSITIONS_FILE.write_text(new_content, encoding="utf-8")
 
 
+def _parse_dollar(s: str) -> float | None:
+    """Parse dollar string like '$11.20' or empty string to float."""
+    s = s.strip()
+    if not s:
+        return None
+    return float(s.replace("$", "").replace(",", ""))
+
+
+def _parse_active_row(line: str) -> Position | None:
+    """Parse a single | A | B | C | ... | row into a Position. None if invalid."""
+    parts = [p.strip() for p in line.split("|")]
+    cells = [p for p in parts if p != ""]
+    if len(cells) < 4:
+        return None
+    if cells[0].lower() == "ticker" or "---" in cells[0]:
+        return None
+    try:
+        return Position(
+            ticker=cells[0],
+            shares=int(cells[1]),
+            avg_cost=_parse_dollar(cells[2]),
+            entry_date=cells[3],
+            stop=_parse_dollar(cells[4]) if len(cells) > 4 else None,
+            target1=_parse_dollar(cells[5]) if len(cells) > 5 else None,
+            target2=_parse_dollar(cells[6]) if len(cells) > 6 else None,
+            status=cells[7] if len(cells) > 7 else "Active",
+            notes=cells[8] if len(cells) > 8 else "",
+        )
+    except (ValueError, IndexError):
+        return None
+
+
+def _iter_active_rows() -> list[Position]:
+    """Read all active position rows from positions.md."""
+    if not POSITIONS_FILE.exists():
+        return []
+    content = POSITIONS_FILE.read_text(encoding="utf-8")
+    closed_marker = "# Closed Positions"
+    idx = content.find(closed_marker)
+    active_section = content[:idx] if idx != -1 else content
+
+    rows = []
+    for line in active_section.splitlines():
+        if not line.startswith("|"):
+            continue
+        pos = _parse_active_row(line)
+        if pos is not None:
+            rows.append(pos)
+    return rows
+
+
+def read(ticker: str) -> Position | None:
+    """Return Position for a single active ticker, or None if not found."""
+    ticker = ticker.upper()
+    for pos in _iter_active_rows():
+        if pos.ticker.upper() == ticker:
+            return pos
+    return None
+
+
 if __name__ == "__main__":
     print("positions.py — see --help")
