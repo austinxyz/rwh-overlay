@@ -98,20 +98,21 @@ def test_read_returns_none_when_file_missing(monkeypatch):
 
 
 def test_list_active_returns_all_active(monkeypatch):
-    """list_active() returns all rows with status=Active."""
+    """list_active() returns all rows with status=Active.
+
+    Uses minimal Position constructor (no optional fields) — also serves as
+    regression coverage for empty-cell parsing in _parse_active_row.
+    """
     with tempfile.TemporaryDirectory() as tmp:
         fake_file = Path(tmp) / "positions.md"
         monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
 
-        positions.add(positions.Position(
-            ticker="POET", shares=500, avg_cost=11.20, entry_date="2026-04-15",
-            stop=9.50, target1=14.00, target2=18.00, status="Active"))
-        positions.add(positions.Position(
-            ticker="INTT", shares=200, avg_cost=14.50, entry_date="2026-04-10",
-            stop=12.00, target1=16.00, target2=20.00, status="Active"))
-        positions.add(positions.Position(
-            ticker="WOLF", shares=100, avg_cost=25.00, entry_date="2026-03-15",
-            stop=20.00, target1=30.00, target2=35.00, status="Watching"))
+        positions.add(positions.Position(ticker="POET", shares=500, avg_cost=11.20,
+                                          entry_date="2026-04-15", status="Active"))
+        positions.add(positions.Position(ticker="INTT", shares=200, avg_cost=14.50,
+                                          entry_date="2026-04-10", status="Active"))
+        positions.add(positions.Position(ticker="WOLF", shares=100, avg_cost=25.00,
+                                          entry_date="2026-03-15", status="Watching"))
 
         active = positions.list_active()
         tickers = [p.ticker for p in active]
@@ -119,6 +120,31 @@ def test_list_active_returns_all_active(monkeypatch):
         assert "INTT" in tickers
         assert "WOLF" not in tickers  # status=Watching, not Active
         assert len(active) == 2
+
+
+def test_round_trip_position_with_none_optional_fields(monkeypatch):
+    """Regression: position with stop/target/notes=None must round-trip via add+read."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        original = positions.Position(
+            ticker="POET", shares=500, avg_cost=11.20, entry_date="2026-04-15",
+            status="Active",  # stop, target1, target2 default to None; notes=""
+        )
+        positions.add(original)
+
+        result = positions.read("POET")
+        assert result is not None
+        assert result.ticker == "POET"
+        assert result.shares == 500
+        assert result.avg_cost == 11.20
+        assert result.entry_date == "2026-04-15"
+        assert result.stop is None
+        assert result.target1 is None
+        assert result.target2 is None
+        assert result.status == "Active"
+        assert result.notes == ""
 
 
 def test_list_active_empty_when_file_missing(monkeypatch):

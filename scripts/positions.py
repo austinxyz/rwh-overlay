@@ -111,9 +111,17 @@ def _parse_dollar(s: str) -> float | None:
 
 
 def _parse_active_row(line: str) -> Position | None:
-    """Parse a single | A | B | C | ... | row into a Position. None if invalid."""
-    parts = [p.strip() for p in line.split("|")]
-    cells = [p for p in parts if p != ""]
+    """Parse a single | A | B | C | ... | row into a Position. None if invalid.
+
+    Preserves empty cells (for None stop/target/notes round-tripping). Only
+    strips the leading/trailing empties caused by `|` at line edges.
+    """
+    cells = [p.strip() for p in line.split("|")]
+    # Drop leading/trailing empties from | at line edges (do not filter internals)
+    if cells and cells[0] == "":
+        cells = cells[1:]
+    if cells and cells[-1] == "":
+        cells = cells[:-1]
     if len(cells) < 4:
         return None
     if cells[0].lower() == "ticker" or "---" in cells[0]:
