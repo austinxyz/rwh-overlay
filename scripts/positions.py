@@ -23,7 +23,7 @@ POSITIONS_FILE = REPO_ROOT / "data" / "positions.md"
 @dataclass
 class Position:
     ticker: str
-    shares: int
+    shares: float  # supports fractional shares (e.g. 75.587)
     avg_cost: float
     entry_date: str
     stop: float | None = None
@@ -36,7 +36,7 @@ class Position:
 @dataclass
 class ClosedPosition:
     ticker: str
-    shares: int
+    shares: float  # supports fractional shares
     entry_date: str
     exit_date: str
     avg_cost: float
@@ -66,9 +66,16 @@ def _fmt_optional_dollar(value: float | None) -> str:
     return f"${value:.2f}" if value is not None else ""
 
 
+def _fmt_shares(value: float) -> str:
+    """Format share count: int if whole, otherwise up to 4 decimals trimmed."""
+    if float(value).is_integer():
+        return str(int(value))
+    return f"{value:.4f}".rstrip("0").rstrip(".")
+
+
 def _format_active_row(pos: Position) -> str:
     return (
-        f"| {pos.ticker} | {pos.shares} | ${pos.avg_cost:.2f} | {pos.entry_date} | "
+        f"| {pos.ticker} | {_fmt_shares(pos.shares)} | ${pos.avg_cost:.2f} | {pos.entry_date} | "
         f"{_fmt_optional_dollar(pos.stop)} | {_fmt_optional_dollar(pos.target1)} | "
         f"{_fmt_optional_dollar(pos.target2)} | {pos.status} | {pos.notes} |"
     )
@@ -79,7 +86,7 @@ def _format_closed_row(c: ClosedPosition) -> str:
     pnl_sign = "+" if c.pnl_dollar >= 0 else ""
     pct_sign = "+" if c.pnl_pct >= 0 else ""
     return (
-        f"| {c.ticker} | {c.shares} | {c.entry_date} | {c.exit_date} | "
+        f"| {c.ticker} | {_fmt_shares(c.shares)} | {c.entry_date} | {c.exit_date} | "
         f"${c.avg_cost:.2f} | ${c.avg_exit:.2f} | "
         f"{pnl_sign}${c.pnl_dollar:.0f} | {pct_sign}{c.pnl_pct:.1f}% | "
         f"{c.reason} | {c.closed_date} |"
@@ -141,7 +148,7 @@ def _parse_active_row(line: str) -> Position | None:
     try:
         return Position(
             ticker=cells[0],
-            shares=int(cells[1]),
+            shares=float(cells[1]),
             avg_cost=_parse_dollar(cells[2]),
             entry_date=cells[3],
             stop=_parse_dollar(cells[4]) if len(cells) > 4 else None,
@@ -333,7 +340,7 @@ def main() -> None:
 
     p_add = sub.add_parser("add", help="Add new position")
     p_add.add_argument("--ticker", required=True)
-    p_add.add_argument("--shares", type=int, required=True)
+    p_add.add_argument("--shares", type=float, required=True)
     p_add.add_argument("--avg-cost", type=float, required=True, dest="avg_cost")
     p_add.add_argument("--entry-date", required=True, dest="entry_date")
     p_add.add_argument("--stop", type=float)
@@ -345,7 +352,7 @@ def main() -> None:
 
     p_upd = sub.add_parser("update", help="Update active position fields")
     p_upd.add_argument("--ticker", required=True)
-    p_upd.add_argument("--shares", type=int)
+    p_upd.add_argument("--shares", type=float)
     p_upd.add_argument("--avg-cost", type=float, dest="avg_cost")
     p_upd.add_argument("--stop", type=float)
     p_upd.add_argument("--target1", type=float)

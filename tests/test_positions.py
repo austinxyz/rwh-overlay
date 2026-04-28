@@ -193,6 +193,23 @@ def test_update_changes_status_to_trimmed(monkeypatch):
         assert result.status == "Trimmed"
 
 
+def test_fractional_shares_round_trip(monkeypatch):
+    """Regression: fractional shares (e.g. 75.587) round-trip via add+read."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(
+            ticker="TSLL", shares=75.587, avg_cost=13.23,
+            entry_date="2026-04-20", status="Active", notes="Tesla 2x ETF"
+        ))
+
+        result = positions.read("TSLL")
+        assert result is not None
+        assert result.shares == 75.587  # exact preserved
+        assert result.avg_cost == 13.23
+
+
 def test_update_raises_for_missing_ticker(monkeypatch):
     """update() raises KeyError when ticker not in active positions."""
     with tempfile.TemporaryDirectory() as tmp:
