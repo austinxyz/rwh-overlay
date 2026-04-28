@@ -74,6 +74,18 @@ def _format_active_row(pos: Position) -> str:
     )
 
 
+def _format_closed_row(c: ClosedPosition) -> str:
+    """Format a closed position as a markdown table row."""
+    pnl_sign = "+" if c.pnl_dollar >= 0 else ""
+    pct_sign = "+" if c.pnl_pct >= 0 else ""
+    return (
+        f"| {c.ticker} | {c.shares} | {c.entry_date} | {c.exit_date} | "
+        f"${c.avg_cost:.2f} | ${c.avg_exit:.2f} | "
+        f"{pnl_sign}${c.pnl_dollar:.0f} | {pct_sign}{c.pnl_pct:.1f}% | "
+        f"{c.reason} | {c.closed_date} |"
+    )
+
+
 def _ensure_file_exists() -> None:
     if not POSITIONS_FILE.exists():
         from datetime import date
@@ -210,6 +222,55 @@ def update(ticker: str, **fields) -> None:
         raise KeyError(f"Ticker {ticker} not found in active positions")
 
     POSITIONS_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def close(ticker: str, avg_exit: float, reason: str, closed_date: str) -> None:
+    """Move an active position to Closed Positions with computed P&L."""
+    ticker = ticker.upper()
+    pos = read(ticker)
+    if pos is None:
+        raise KeyError(f"Ticker {ticker} not found in active positions")
+
+    pnl_dollar = (avg_exit - pos.avg_cost) * pos.shares
+    pnl_pct = (avg_exit / pos.avg_cost - 1) * 100
+
+    closed = ClosedPosition(
+        ticker=pos.ticker,
+        shares=pos.shares,
+        entry_date=pos.entry_date,
+        exit_date=closed_date,
+        avg_cost=pos.avg_cost,
+        avg_exit=avg_exit,
+        pnl_dollar=pnl_dollar,
+        pnl_pct=pnl_pct,
+        reason=reason,
+        closed_date=closed_date,
+    )
+
+    # Split into active + closed sections so we only remove from active
+    content = POSITIONS_FILE.read_text(encoding="utf-8")
+    closed_marker = "# Closed Positions"
+    idx = content.find(closed_marker)
+    if idx == -1:
+        raise ValueError("positions.md missing '# Closed Positions' section")
+
+    active_part = content[:idx]
+    closed_part = content[idx:]
+
+    # Remove the matching row from active_part only
+    active_lines = active_part.splitlines()
+    new_active_lines = []
+    for line in active_lines:
+        if line.startswith("|"):
+            pos_check = _parse_active_row(line)
+            if pos_check and pos_check.ticker.upper() == ticker:
+                continue
+        new_active_lines.append(line)
+
+    # Append closed row to closed_part
+    new_active = "\n".join(new_active_lines).rstrip() + "\n\n"
+    new_closed = closed_part.rstrip() + "\n" + _format_closed_row(closed) + "\n"
+    POSITIONS_FILE.write_text(new_active + new_closed, encoding="utf-8")
 
 
 if __name__ == "__main__":

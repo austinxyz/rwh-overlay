@@ -204,3 +204,47 @@ def test_update_raises_for_missing_ticker(monkeypatch):
             assert False, "Should have raised KeyError"
         except KeyError as e:
             assert "NOTHERE" in str(e)
+
+
+def test_close_moves_position_to_closed(monkeypatch):
+    """close() removes from Active and appends to Closed Positions."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(ticker="POET", shares=500, avg_cost=11.20,
+                                          entry_date="2026-04-15", status="Active"))
+
+        positions.close("POET", avg_exit=7.95, reason="Stop broken",
+                        closed_date="2026-04-28")
+
+        # No longer in active
+        assert positions.read("POET") is None
+
+        # Verify Closed Positions row exists
+        content = fake_file.read_text(encoding="utf-8")
+        closed_section = content.split("# Closed Positions")[1]
+        assert "POET" in closed_section
+        assert "$7.95" in closed_section or "7.95" in closed_section
+        assert "Stop broken" in closed_section
+        # P&L = (7.95 - 11.20) * 500 = -1625
+        assert "-$1625" in closed_section or "-1625" in closed_section
+
+
+def test_close_computes_pnl_correctly(monkeypatch):
+    """close() correctly computes P&L $ and P&L %."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(ticker="WOLF", shares=200, avg_cost=25.50,
+                                          entry_date="2026-03-15", status="Active"))
+
+        positions.close("WOLF", avg_exit=32.00, reason="Target 1 hit",
+                        closed_date="2026-04-20")
+
+        content = fake_file.read_text(encoding="utf-8")
+        # P&L $ = (32 - 25.5) * 200 = 1300
+        # P&L % = (32/25.5 - 1) * 100 = 25.49%
+        assert "$1300" in content or "1300" in content
+        assert "+25.5%" in content or "25.5%" in content
