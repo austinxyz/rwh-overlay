@@ -154,3 +154,53 @@ def test_list_active_empty_when_file_missing(monkeypatch):
         monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
 
         assert positions.list_active() == []
+
+
+def test_update_modifies_single_field(monkeypatch):
+    """update() changes specified field while preserving others."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(ticker="POET", shares=500, avg_cost=11.20,
+                                          entry_date="2026-04-15", stop=9.50,
+                                          status="Active", notes="Original"))
+
+        positions.update("POET", stop=10.50, notes="Stop tightened")
+
+        result = positions.read("POET")
+        assert result.stop == 10.50
+        assert result.notes == "Stop tightened"
+        assert result.shares == 500  # Preserved
+        assert result.avg_cost == 11.20  # Preserved
+
+
+def test_update_changes_status_to_trimmed(monkeypatch):
+    """update() can change shares + status for partial trim."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+
+        positions.add(positions.Position(ticker="POET", shares=500, avg_cost=11.20,
+                                          entry_date="2026-04-15", status="Active"))
+
+        positions.update("POET", shares=250, status="Trimmed",
+                         notes="Trimmed 50% on 4/28")
+
+        result = positions.read("POET")
+        assert result.shares == 250
+        assert result.status == "Trimmed"
+
+
+def test_update_raises_for_missing_ticker(monkeypatch):
+    """update() raises KeyError when ticker not in active positions."""
+    with tempfile.TemporaryDirectory() as tmp:
+        fake_file = Path(tmp) / "positions.md"
+        monkeypatch.setattr(positions, "POSITIONS_FILE", fake_file)
+        positions._ensure_file_exists()
+
+        try:
+            positions.update("NOTHERE", stop=5.00)
+            assert False, "Should have raised KeyError"
+        except KeyError as e:
+            assert "NOTHERE" in str(e)

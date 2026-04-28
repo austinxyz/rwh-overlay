@@ -175,5 +175,42 @@ def list_active() -> list[Position]:
     return [p for p in _iter_active_rows() if p.status in ("Active", "Trimmed")]
 
 
+def update(ticker: str, **fields) -> None:
+    """Update specified fields on an existing active position.
+
+    Allowed fields: shares, avg_cost, stop, target1, target2, status, notes
+    """
+    ticker = ticker.upper()
+    allowed = {"shares", "avg_cost", "stop", "target1", "target2", "status", "notes"}
+    bad = set(fields) - allowed
+    if bad:
+        raise ValueError(f"Unknown fields: {bad}")
+
+    if not POSITIONS_FILE.exists():
+        raise KeyError(f"positions.md does not exist; ticker {ticker} not found")
+
+    content = POSITIONS_FILE.read_text(encoding="utf-8")
+    lines = content.splitlines()
+    found = False
+
+    for i, line in enumerate(lines):
+        if not line.startswith("|"):
+            continue
+        pos = _parse_active_row(line)
+        if pos is None:
+            continue
+        if pos.ticker.upper() == ticker:
+            for key, val in fields.items():
+                setattr(pos, key, val)
+            lines[i] = _format_active_row(pos)
+            found = True
+            break
+
+    if not found:
+        raise KeyError(f"Ticker {ticker} not found in active positions")
+
+    POSITIONS_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 if __name__ == "__main__":
     print("positions.py — see --help")
