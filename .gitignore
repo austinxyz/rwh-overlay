@@ -15,3 +15,6 @@ build.log
 # OS
 .DS_Store
 Thumbs.db
+
+# Local position tracking (sensitive)
+data/positions.md
