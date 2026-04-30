@@ -4,6 +4,46 @@
 
 ---
 
+## [2026-04-29] — Q1 2026 Earnings Refresh (via /stock-refresh)
+
+**Trigger**: eBay reported Q1 2026 results post-close 2026-04-29 — broad-based beat.
+
+**Headline**: Revenue $3.1B (+19% rep / +17% FXN, beat $3.00–3.05B guide), GMV $22.2B (+14% FXN, beat +10–12% guide), non-GAAP EPS $1.66 (beat $1.58 consensus by $0.08), non-GAAP op margin 29.4% (beat 28.3–29.2% guide). **Active buyers 136M (+1% YoY) — first stable+growth print since 2021.** Stock +3.42% to $103.79 on the day.
+
+**Key delta**: The single largest unresolved bear-case data point in v2.6 (active buyer structural decline 132M vs 180M+ peak) **inflected** in Q1'26. v2.6 entry condition "sustained reacceleration print" satisfied. FY26 EPS consensus revised up to ~$6.04 (was ~$5.85 90 days ago); forward P/E compressed from ~18x → ~15.6x.
+
+**Q2 2026 guide**: Revenue $2.97–$3.03B (+8–10% FXN), GMV $21.3–$21.7B, non-GAAP EPS $1.46–1.51 — sequential deceleration but vs. tougher comps; conservative posture.
+
+**Other notes**:
+- Depop closing slipped from H1 2026 → end of Q3 2026 (regulatory approval delay; not material)
+- $639M capital returned in Q1 ($500M buyback + $139M dividend); ~$2.3B authorization remaining
+- Q1 FCF $898M unusually strong (working-capital timing); annualized run rate well above FY25's $1.5B
+- Agentic-commerce / LLM disintermediation and de minimis tariff impact NOT addressed in Q1 PR — open questions for transcript
+
+### What Changed (sections refreshed)
+
+- **financials.md**: Updated header (Last Updated, Next Update Trigger), refreshed Annual GMV & Revenue, Profitability (added Q1'26 column), Cash Flow (added Q1'26 column), Balance Sheet (Q4'25 + Q1'26 actuals), Recent Quarterly Trend (added Q1'26 actual + Q2'26 guide), Key Valuation Metrics (refreshed price + forward P/E + analyst targets).
+- **thesis.md**: Updated header (Last Updated, Verdict, Price at Analysis); §2 Annual Financial Metrics (added Q1'26 actual + active buyers row); §9 Key Risks (active buyer probability High → Medium ↓; FCF<return Medium → Low ↓; agentic-commerce + de minimis added as named risks); §13 Bull/Bear/Base (probabilities 25/55/20 → 30/55/15; PW EV $108 → $116; targets and EPS scenarios refreshed); §15 Bottom Line (verdict, targets, entry tranches, open transcript questions).
+- **overview.md**: Refreshed Status line, Last Updated, Conviction (Medium → Medium-High), Key Stats table (Q1'26 actuals, forward P/E, analyst targets, 52w range).
+
+### Thesis Status
+
+- **Overall**: 🟡 **Strengthened** (Watch / Hold → **Watch (Higher Conviction) / Selective Initiate**). Recommendation verbs upgraded: prior "Wait for $80 weakness or sustained reacceleration print" — the latter is now satisfied.
+- **BAIT delta**: A bumped to **Strong** on confirmed active-buyer inflection + GMV reacceleration that consensus underestimated; B unchanged Moderate; I unchanged Weak (Q1 results are public); T improving (forward P/E compressed via numerator).
+- **Price target delta**: Bull $145 (unchanged) | Base $115 → **$112** (slight tweak) | Bear $60 → **$67** (active-buyer inflection lifts floor). PW EV ~$113 → **~$116**.
+- **Catalyst & Sentiment delta**: Q1 beat is the catalyst. 30-day analyst revisions: 3 up / 0 down for FY EPS. Multiple firms raised PT in last 30 days (UBS, B of A, Cantor, Morgan Stanley, Wells Fargo).
+
+### Recommendation
+
+- **For a non-holder**: 🟡 Selective Initiate — 50% Tranche 1 on $95–$100 pullback (most likely on Q2 guide caution); 30% Tranche 2 on $80–$90 macro pullback; 20% Tranche 3 on confirmed Q2/Q3 follow-through.
+- **For a current holder**: 🟡 Hold / mild constructive — capital return + reacceleration support; trim only on rally toward $120+.
+
+**前次论点状态**: 🟡 Watch / Hold (Low-Moderate Conviction) → **更新后**: 🟡 Watch (Higher Conviction) / Selective Initiate (Medium-High Conviction)
+
+**Next review trigger**: Q2 2026 earnings (~early August 2026); Depop closing announcement (~Q3 2026 end); any agentic-commerce / de minimis cross-border GMV data point.
+
+---
+
 ## [2026-04-26] — v2.6+v2.7+v2.8 Retrofit (Primary-source synthesis depth + page-output discipline)
 
 **Trigger**: Schema retrofit pass applying CLAUDE.md v2.6 (Rules #19–#20: shareholder-letter + 10-K MD&A primary-source synthesis), v2.7 (5-year 10-K + letter baselines, quarterly-letter Pattern B substitution), and v2.8 (Rules #21–#26: synthesis over transcription, output discipline, moat consolidation, competitive-landscape integration, risk-factor materiality filter, R/R discipline). EBAY was on v2.5 and was missing the multi-year primary-source baselines.

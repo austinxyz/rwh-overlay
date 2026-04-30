@@ -75,6 +75,11 @@ Apply persona's **持仓决策矩阵** to each ticker (see Section 5 below). The
 **深度查看：** 调用 `/morning-check <TICKER>` 查看完整决策矩阵
 ```
 
+**Save the ALL summary to file:**
+- Path: `data/morning-checks/YYYY-MM-DD.md`
+- If file exists, append a new section `## ALL — HH:MM ET\n\n[content]` at the end (preserves earlier checks the same day)
+- If file does not exist, create with header `# Morning Checks — YYYY-MM-DD\n\n` then add the section
+
 ALL mode ends here. Skip the rest (no user confirmation, no positions.md updates).
 
 ### 2. Check existing position
@@ -234,6 +239,12 @@ Format:
 [ ] Other：____
 ```
 
+**Save the report to file (do this BEFORE waiting for confirmation):**
+- Path: `data/morning-checks/YYYY-MM-DD.md`
+- If file does not exist, create with header `# Morning Checks — YYYY-MM-DD\n\n`
+- Append a new section using `## $TICKER — HH:MM ET\n\n[full report content]\n\n---\n\n`
+- This preserves a chronological audit trail of all checks and recommendations made on this day, regardless of whether user executes the action
+
 Wait for user explicit confirmation.
 
 ### 7. Update positions.md (if applicable)
@@ -271,11 +282,19 @@ py scripts/positions.py update --ticker $TICKER --stop <new_stop> \
 
 ### 8. Confirm completion
 
-Report final state:
+After user confirmation, update the saved morning-check file (from Step 6) by appending the user's actual decision under that section:
+
+```markdown
+**用户决策：** [chose]
+**positions.md 更新：** [是/否，描述操作]
+```
+
+Then report final state:
 
 ```
 ✅ 决策记录完成：
 - 推荐动作：[action]
 - 用户确认：[chose]
 - positions.md 已更新（[操作]）/ 未更新
+- 报告已归档：data/morning-checks/YYYY-MM-DD.md
 ```

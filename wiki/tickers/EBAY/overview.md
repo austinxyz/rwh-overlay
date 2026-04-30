@@ -1,9 +1,9 @@
 # EBAY — Overview
 
-> **Status**: Active — compiled 2026-04-24
-> **Last Updated**: 2026-04-24
+> **Status**: Active — Watch (Higher Conviction) / Selective Initiate post Q1'26 beat
+> **Last Updated**: 2026-04-29 (Q1 2026 earnings refresh)
 > **Moat**: Narrow
-> **Conviction**: Medium
+> **Conviction**: Medium-High (upgraded from Medium on active buyer inflection)
 
 ---
 
@@ -56,28 +56,34 @@ for a $1B GMV asset is expensive.
   Mercari, Poshmark, Vinted attack C2C fashion; Bring a Trailer / Copart attack auto; new
   entrants chip at every sub-category
 
-## Key Stats (2026-04-24)
+## Key Stats (2026-04-29)
 
 | Metric | Value |
 |--------|-------|
-| Price | ~$103.40 |
-| Market Cap | ~$47B |
-| EV | ~$52B |
+| Price | $103.79 (+3.42% on Q1'26 beat) |
+| Market Cap | ~$46.5B |
+| EV | ~$50.8B |
 | FY2025 Revenue | $11.1B |
 | FY2025 EBITDA | $2.68B |
 | FY2025 Net Income | $2.03B |
 | FY2025 GMV | ~$79B |
 | FY2025 Non-GAAP EPS | ~$4.80 [Est.] |
 | FY2025 FCF | ~$1.5B |
-| FY2026E Revenue (ex-Depop) | ~$11.5B+ (mgmt: in-line to slightly ahead of GMV) |
-| Q1 2026E GMV | $21.5–$21.9B (FX-neutral +10–12%) |
-| Q1 2026E Non-GAAP EPS | $1.53–$1.59 (+12–16% YoY) |
-| Trailing P/E | ~25x |
-| Forward P/E | ~18x |
-| P/FCF | ~31x |
-| 52-Wk High | ~$107.13 (Apr 20, 2026) |
-| Dividend | $0.31/quarter → ~$1.24/year (~1.2% yield) |
-| 12-Month Stock Performance | +33.5% |
+| **Q1 2026 Revenue** | **$3.10B (+19% rep / +17% FXN)** — beat guide $3.00–3.05B |
+| **Q1 2026 GMV** | **$22.2B (+14% FXN)** — beat guide $21.5–21.9B (+10–12%) |
+| **Q1 2026 Non-GAAP EPS** | **$1.66** — beat consensus $1.58 by $0.08 |
+| **Q1 2026 Active Buyers** | **136M (+1% YoY)** — first stable+growth print since 2021 |
+| **Q1 2026 Non-GAAP Op Margin** | **29.4%** — beat top of guide 28.3–29.2% |
+| **Q1 2026 FCF** | $898M |
+| FY2026E Revenue (consensus) | ~$12.0B (+8%; revised up from $11.85B) |
+| Q2 2026E Revenue (guide) | $2.97–$3.03B (+8–10% FXN) |
+| Q2 2026E Non-GAAP EPS (guide) | $1.46–$1.51 |
+| Trailing P/E | ~24x |
+| **Forward P/E** | **~15.6x** (compressed from ~18x as FY26E EPS revises up) |
+| 52-Wk High / Low | $107.34 / $67.19 (3.3% below 52w high) |
+| Analyst Target (mean / high / low) | $100.87 / $132.00 / $60.00 (n=30) |
+| Dividend | $0.31/quarter → ~$1.24/year (~1.19% yield) |
+| 12-Month Stock Performance | ~+30% |
 
 ## Backlinks
 

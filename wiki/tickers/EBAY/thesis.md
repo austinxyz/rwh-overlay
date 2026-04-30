@@ -1,11 +1,12 @@
 # EBAY — Investment Thesis
 
 > **Status**: Active — compiled 2026-04-24
-> **Last Updated**: 2026-04-24
-> **Price at Analysis**: ~$103.40
-> **Sources**: eBay Q4 2025 IR press release, Q4 2025 earnings call transcript (Motley Fool /
-> Seeking Alpha), indexbox.io Q4 2025 summary, valueaddedresource.net, MacroTrends,
-> stockanalysis.com, financecharts.com, seekingalpha.com, fastcompany.com
+> **Last Updated**: 2026-04-29 (Q1 2026 earnings refresh)
+> **Verdict**: 🟡 Watch (Higher Conviction) / Selective Initiate
+> **Price at Analysis**: $103.79 (refreshed from ~$103.40 → ~$97.94 v2.6 → $103.79 post-Q1)
+> **Sources**: eBay Q1 2026 IR press release (2026-04-29), Q4 2025 IR + earnings call transcript,
+> Motley Fool Q1 2026 transcript, Stocktitan Q1 2026 summary, indexbox.io, valueaddedresource.net,
+> MacroTrends, stockanalysis.com, financecharts.com, seekingalpha.com, fastcompany.com
 
 ---
 
@@ -56,15 +57,17 @@ is no longer a margin-of-safety price.
 
 ### GMV & Revenue Trend
 
-| Metric | FY2021 | FY2022 | FY2023 | FY2024 | FY2025 | FY2026E |
-|--------|--------|--------|--------|--------|--------|---------|
-| Revenue ($B) | $10.42 | $9.80 | $10.11 | $10.28 | $11.10 | ~$11.5B+ |
-| Revenue Growth | +17% | –6% | +3% | +2% | +8% | mgmt: in-line/slightly ahead of GMV |
-| GMV ($B) | ~$87 | ~$74 | ~$73 | ~$74 | ~$79 | Q1: $21.5–21.9B guided (+10–12%) |
-| Advertising Revenue | — | — | — | — | $544M | Expanding (2.6% GMV penetration) |
+| Metric | FY2021 | FY2022 | FY2023 | FY2024 | FY2025 | Q1'26 Actual | FY2026E |
+|--------|--------|--------|--------|--------|--------|--------------|---------|
+| Revenue ($B) | $10.42 | $9.80 | $10.11 | $10.28 | $11.10 | **$3.10** (+19% rep / +17% FXN) | ~$12.0B (consensus revised up) |
+| Revenue Growth | +17% | –6% | +3% | +2% | +8% | **+19% rep** | ~+8% |
+| GMV ($B) | ~$87 | ~$74 | ~$73 | ~$74 | ~$79 | **$22.2** (+18% rep / +14% FXN) | ~$83B run rate |
+| Advertising Revenue | — | — | — | — | $544M | Expanding (3%+ GMV penetration target) | — |
+| Active Buyers (M) | ~180+ | ~135 | ~133 | 132 | 132 | **136 (+1% YoY)** | — |
 
-*Post-COVID hangover: GMV fell from ~$87B (2021) to ~$73B (2022-2023) and is now recovering.
-FY2025 is the first meaningful GMV growth year since the 2021 peak.*
+*Q1 2026 marks the **active buyer inflection** — 136M (+1% YoY), the first stable+growth print
+since 2021 peak. This was the single largest unresolved bear-case data point in the v2.6 thesis;
+it has now turned. GMV +14% FXN materially beat the +10–12% guide.*
 
 ### Profitability
 
@@ -227,15 +230,16 @@ $200B+ globally, growing 15%+ annually) is the growth engine for the next decade
 
 | Risk | Impact | Probability | Status |
 |------|--------|-------------|--------|
-| Active buyer count structural decline (132M vs. 180M+ peak) | High | High | Ongoing; focus categories trying to arrest this |
+| Active buyer count structural decline (132M vs. 180M+ peak) | High | **Medium** ↓ (was High) | **Receding**: Q1'26 print 136M (+1% YoY) is first stable+growth quarter since 2021 |
 | Amazon secondhand / renewed programs improving | High | Medium | Amazon Second Chance expanding |
 | Vertical specialist erosion (Chrono24, GOAT, Bring a Trailer) | Medium | High | Already happening; eBay retreating to "hub" role |
-| Depop integration failure / overpay ($1.2B for $1B GMV) | Medium | Medium | $1.2B is a full 80% of annual FCF; integration risk real |
+| Depop integration delay / overpay ($1.2B for $1B GMV) | Medium | Medium | Closing slipped from H1 to **end of Q3 2026**; $1.2B is ~80% of annual FCF |
 | Mercari / Poshmark / Vinted in C2C fashion | Medium | High | C2C apparel is contested |
-| Tariff/trade policy impact on cross-border GMV | Medium | Medium | eBay has significant cross-border volume |
-| FCF < shareholder return (sustainability of buyback pace) | Medium | Medium | Currently returning 2x FCF; balance sheet funded |
+| Agentic-commerce / LLM disintermediation (NEW in FY25 10-K) | High | Medium | Not addressed in Q1'26 PR; transcript needed |
+| De minimis exemption removal / tariff impact on cross-border GMV | Medium | Medium | EU effective July 2026; not addressed in Q1'26 PR |
+| FCF < shareholder return (sustainability of buyback pace) | Medium | Low ↓ | Q1'26 FCF $898M (annualized ~$3.5B) easily covers ~$2B/yr return target |
 | IRA / regulatory risk | Low | Low | eBay not in regulated healthcare/pharma space |
-| GMV growth reversal if macro weakens | High | Low-Medium | Post-COVID bounce could fade; discretionary categories at risk |
+| GMV growth reversal if macro weakens | High | Low | Q1'26 +14% FXN reduces near-term reversal risk |
 
 **Key insight**: eBay's biggest risk is NOT competition from Amazon directly on new goods —
 that battle was decided a decade ago. The real risk is that **vertical specialists** (one
@@ -364,52 +368,64 @@ Lower conviction than LLY or other high-BAIT names. The story is good but no lon
 
 ## Section 14 — Bull / Bear / Base Cases
 
-**Bull Case — Target: $130–$150 (18-month) | Probability: 25%**
-- Q1–Q2 2026 GMV growth sustains at 10–12% as guided; Depop adds incremental GMV quickly
+**Bull Case — Target: $130–$150 (18-month) | Probability: 30%** ↑ (was 25%)
+- Q1 2026 GMV +14% FXN already exceeds prior bull GMV expectations; if Q2/Q3 sustain >10% FXN with Depop adding fashion GMV, bull case strengthens
+- Active buyer inflection sustains (136M → 138–140M) — confirms structural turnaround
 - UK private seller re-monetization beats expectations; ad penetration hits 3%+
-- FY2026E non-GAAP EPS ~$5.50 → 25x P/E = $137.50
-- Buyback pace accelerates; share count falls faster than expected
+- FY2026E non-GAAP EPS revises to ~$6.50+ → 22–23x P/E = $145–150
+- Buyback pace accelerates on $898M Q1 FCF run rate
 
-**Bear Case — Target: $65–$80 (18-month) | Probability: 20%**
-- Macro recession + tariff headwinds → GMV growth reverses to –2% to –5%
-- Depop integration disappoints; $1.2B write-down risk
-- Active buyer count falls below 120M; take rate expansion stalls
-- Multiple compresses back to 14-15x forward P/E → $65–$80
+**Bear Case — Target: $60–$75 (18-month) | Probability: 15%** ↓ (was 20%)
+- Macro recession + tariff/de minimis (EU July 2026) headwinds → cross-border GMV decline >10%
+- Agentic-commerce disintermediation accelerates faster than expected; AI-search referral falls >15%
+- Depop integration disappoints / further delays; $1.2B write-down risk
+- Active buyer print regresses below 130M
+- Multiple compresses to 12–14x forward P/E → $60–$75
 
-**Base Case — Target: $100–$115 (18-month) | Probability: 55%**
-- GMV grows 6–8% for FY2026; revenue grows 8–10%
-- Non-GAAP EPS ~$5.20–$5.50 driven by operating leverage + buybacks
-- Multiple holds at ~18–20x forward → $100–$115
+**Base Case — Target: $105–$120 (18-month) | Probability: 55%** (unchanged)
+- GMV grows 8–10% FXN for FY2026 (Q1 +14% normalizes lower in H2); revenue grows 8–10%
+- Non-GAAP EPS ~$6.00–$6.30 driven by operating leverage + buybacks
+- Multiple holds at ~17–19x forward → $105–$120
 
 **Asymmetry**:
-- Bull upside from $103: +26–46%
-- Bear downside from $103: –22–37%
-- Risk/reward: roughly 1.2:1 — modest, not compelling at current price
+- Bull upside from $103.79: +25–45%
+- Bear downside from $103.79: –28–42%
+- Risk/reward: ~1.0–1.1:1 vs Bear; ~2.6:1 vs Base — improved skew given Q1 beat lifts base case
 
 **Probability-Weighted EV**:
-Bull $140 × 25% + Base $107 × 55% + Bear $72 × 20% = **$108**
-→ ~**+5% upside** from current $103 on 18-month horizon
+Bull $140 × 30% + Base $112 × 55% + Bear $67 × 15% = **$116**
+→ ~**+12% upside** from $103.79 on 18-month horizon (up from prior PW EV ~$113)
 
 ---
 
 ## Section 15 — Bottom Line
 
-**1-Year Target**: ~$105–$115 (+2–12% upside) — base case execution
-**3-Year Target**: ~$130–$160 — if recommerce inflection sustains, Depop integrates, and buybacks compound
-**Probability-Weighted EV**: ~$108 (+5% upside at current price)
+**1-Year Target**: ~$110–$120 (+6–16% upside) — base case execution post Q1 beat
+**3-Year Target**: ~$135–$170 — recommerce inflection now confirmed; Depop closing Q3'26; buyback compounding
+**Probability-Weighted EV**: **~$116** (+12% upside from $103.79; up from $113)
 
-**Verdict**: **Watch / Small Position** — not a strong buy at $103
-- The strategy is correct (recommerce + focus categories + AI trust layer)
-- The execution is improving (GMV inflection in FY2025, double-digit EPS growth)
-- The buyback program ($2.8B authorized) is a powerful EPS compounding engine
-- **But**: The easy money has been made (stock +33%); forward P/E ~18x prices in a lot of good news;
-  Depop integration is a near-term margin headwind; active buyer decline is structural
+**Verdict**: 🟡 **Watch (Higher Conviction) / Selective Initiate** — not a strong buy at $103.79 but the v2.6 input condition "sustained reacceleration print" has been met
+- The strategy is **validated**: recommerce + focus categories + AI trust layer are now visible in the GMV +14% FXN print
+- **Active buyer inflection is the headline**: 132M → 136M (+1% YoY) — the largest structural bear-case data point has flipped
+- The buyback program (~$2.3B remaining authorization) compounded by 15.6x forward P/E (down from 18x as estimates revise up) is mechanically attractive
+- **But**: stock has rallied $97.94 → $103.79 (+6% in 3 trading days); v2.6 Tranche 1 entry zone ($90–$100) largely missed; agentic-commerce + de minimis tariff risks unaddressed in Q1 PR (transcript needed)
 
-**Best entry**: $85–$95 range on a macro pullback or Depop-related concern.
-**Portfolio weight**: 2–4% maximum given the narrow moat and structural headwinds.
+**Best entry**:
+- 50% Tranche 1 if pullback to $95–$100 (most likely on Q2 guide caution or macro selloff)
+- 30% Tranche 2 on $80–$90 macro pullback
+- 20% Tranche 3 on confirmed Q2/Q3 follow-through + Depop close
 
-**The non-obvious bull case**: eBay's buyback math is the highest-conviction element. If eBay
-can maintain ~$2B+ in annual buybacks on a $47B market cap, share count falls 4–5%/year.
-Even with 5% GMV growth and flat margins, that's 10–12% annual EPS growth — making the ~18x
-forward P/E cheaper every year. This is a "buy and ignore" story for the next 3–5 years if
-you can get in at the right price.
+**Portfolio weight**: 2–4% maximum (unchanged) — narrow moat caps allocation.
+
+**The non-obvious bull case (refined post Q1)**: With FY26 EPS revising up to ~$6.04+
+(was $5.85 90d ago) and forward P/E now 15.6x (was ~18x), the multiple has compressed by
+re-rating math. If FY26 EPS hits ~$6.30 base case + ~5% buyback float reduction, FY27 EPS
+runs ~$6.90 → at 18x forward = ~$124. This is the buyback-compounding-into-re-rating thesis
+working in real time. The active buyer turnaround is the missing piece that unlocks this
+math from "maybe" to "probable."
+
+**Open questions for Q1'26 transcript review**:
+- Any agentic-commerce / AI shopping-agent referral data?
+- Cross-border GMV exposure to upcoming EU de minimis (July 2026)?
+- Focus Categories % of GMV update (was ~30% in FY25)?
+- Depop closing timeline detail (regulatory holdup?)?
